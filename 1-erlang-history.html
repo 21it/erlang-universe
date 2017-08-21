@@ -210,7 +210,7 @@
 
  - ... but concurrent apps still can have problems with deadlocks / race conditions
 
- - because of only one thread, one fat concurrent task will affect all application
+ - because of only one real thread, one fat concurrent task will affect all application
 
 ```javascript
 (() => {for (i = 0; i <= 1000000; i++) {console.log(i)}})()
