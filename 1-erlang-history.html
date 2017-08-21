@@ -18,28 +18,112 @@
         text-decoration: none;
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+      .left-column h2:last-of-type, .left-column h3:last-child {
+        color: #000;
+      }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
     </style>
   </head>
   <body>
     <textarea id="source">
 
-class: center, middle
+.left-column[
+## Historical context
+### - Ericsson
+]
 
-# Historical context
-.left[
-- Ericsson (since 1876)
+.right-column[
+
+- founded by Lars Magnus Ericsson
+
+- since 1876
+
+- Bell Labs can not compete in Scandinavia
+
+- Ericsson is almost monopoly telecom company in region during XX century
+
+.center[
+  <img src="img/Lars-Magnus-Ericsson.jpg" width="30%">
+  <img src="img/Ericsson-phone.jpg" width="30%">
+  <img src="img/old-exchange.jpg" width="30%">
+  <img src="img/Ericsson-mobiles.jpg" width="50%">
+]
+]
+
+---
+
+.left-column[
+## Historical context
+### - Ericsson
+### - AXE/PLEX
+]
+
+.right-column[
+
+- It's 1984 now!
+
 - AXE telephone exchange (since 1974)
+
 - PLEX (cross between Fortran and a macro assembler)
-- 1984 year
+
+- Berkeley introduced UNIX 4.2 BSD
+
+- UNIX can run on different architecures including VAX
+]
+
+.center[
+  <img src="img/AXE-10.jpg" width="50%">
+
+  **Motivation is "to make something like PLEX, to run on ordinary hardware, only better".**
+]
+
+---
+
+.left-column[
+## Historical context
+### - Ericsson
+### - AXE/PLEX
+### - Telecom requirements
+]
+
+.right-column[
+
+- Handling a very large number of concurrent activities
+
+- Actions to be performed at a certain point of time or within a certain time
+
+- Systems distributed over several computers
+
+- Interaction with hardware
+
+- Very large software systems
+
+- Continuous operation over several years
+
+- Software maintenance (reconfiguration, etc.) without stopping the system
+
+- Stringent quality and reliability requirements
+
+- Fault tolerance both to hardware failures and software errors
+
 ]
 
     </textarea>
     <script src="js/remark-latest.min.js">
     </script>
     <script>
-      var slideshow = remark.create({
-        slideNumberFormat: ((current, total) => ""),
-      });
+      var slideshow = remark.create();
     </script>
   </body>
 </html>
