@@ -101,8 +101,6 @@
 
 - Handling a very large number of concurrent activities
 
-- Actions to be performed at a certain point of time or within a certain time
-
 - Systems distributed over several computers
 
 - Interaction with hardware
@@ -175,6 +173,51 @@
 ]
 
 ]
+
+---
+
+.left-column[
+## Erlang VM
+### - Concurrency vs parallelism
+]
+
+.right-column[
+  <img src="img/concurrency-vs-parallelism.png" width="100%">
+]
+
+---
+
+.left-column[
+## Erlang VM
+### - Concurrency vs parallelism
+]
+
+.right-column[
+
+- True parallelism: **Java, C++, Fortran**
+
+ - real UNIX threads are heavy
+
+ - requires very high developer skill
+
+ - overhead for processes sync and management (MPI, OpenMP etc)
+
+ - race conditions, deadlocks,
+
+- Concurrency: **JavaScript, Lua, Python, Ruby, etc...**
+
+ - actually, only one UNIX thread for all
+
+ - ... but concurrent apps still can have problems with deadlocks / race conditions
+
+ - because of only one thread, one fat concurrent task will affect all application
+
+```javascript
+(() => {for (i = 0; i <= 1000000; i++) {console.log(i)}})()
+```
+
+]
+
     </textarea>
     <script src="js/remark-latest.min.js">
     </script>
