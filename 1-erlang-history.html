@@ -218,6 +218,66 @@
 
 ]
 
+---
+
+.left-column[
+## Erlang VM
+### - Concurrency vs parallelism
+]
+
+.right-column[
+
+- Erlang VM is cross between **true parallelism** and **concurrency**
+
+```
+              Single modern Erlang node (with SMP)
+
++--------------------------------------------------------+
+|                                                        |
+|  +-----------------+-----------------+                 |
+|  |                 |                 |                 |
+|  |  Scheduler # 1  |  Run Queue # 1  <--+              |
+|  |                 |                 |  |              |
+|  +-----------------+-----------------+  |              |
+|                                         |              |
+|  +-----------------+-----------------+  |              |
+|  |                 |                 |  |              |
+|  |  Scheduler # 2  |  Run Queue # 2  <----> Migration  |
+|  |                 |                 |  |     Logic    |
+|  +-----------------+-----------------+  |              |
+|                                         |              |
+|  .                                      |              |
+|  .                                      |              |
+|  .                                      |              |
+|                                         |              |
+|  +-----------------+-----------------+  |              |
+|  |                 |                 |  |              |
+|  |  Scheduler # N  |  Run Queue # N  <--+              |
+|  |                 |                 |                 |
+|  +-----------------+-----------------+                 |
+|                                                        |
++--------------------------------------------------------+
+```
+
+]
+
+---
+
+
+.left-column[
+## Erlang VM
+### - Concurrency vs parallelism
+]
+
+.right-column[
+
+  - Erlang is OS inside OS (all complexity is hidden inside Erlang VM)
+
+  <img src="img/Erlang-htop.jpg" width="100%">
+  
+  <img src="img/ppc.jpg" width="100%">
+]
+
     </textarea>
     <script src="js/remark-latest.min.js">
     </script>
