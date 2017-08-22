@@ -178,7 +178,7 @@
 
 .left-column[
 ## Erlang VM
-### - Concurrency vs parallelism
+### - Concurrency
 ]
 
 .right-column[
@@ -189,7 +189,7 @@
 
 .left-column[
 ## Erlang VM
-### - Concurrency vs parallelism
+### - Concurrency
 ]
 
 .right-column[
@@ -222,7 +222,7 @@
 
 .left-column[
 ## Erlang VM
-### - Concurrency vs parallelism
+### - Concurrency
 ]
 
 .right-column[
@@ -263,10 +263,9 @@
 
 ---
 
-
 .left-column[
 ## Erlang VM
-### - Concurrency vs parallelism
+### - Concurrency
 ]
 
 .right-column[
@@ -274,9 +273,140 @@
   - Erlang is OS inside OS (all complexity is hidden inside Erlang VM)
 
   <img src="img/Erlang-htop.jpg" width="100%">
-  
+
   <img src="img/ppc.jpg" width="100%">
 ]
+
+---
+
+.left-column[
+## Erlang VM
+### - Concurrency
+### - Processes
+]
+
+.right-column[
+  To obtain scalability and fault tolerance is quite easy. You took 2 things, you make them **share nothing** and you get fault tolerance and you can scale. (c) Joe Armstrong
+
+  <img src="img/erlang-mailbox.png" width="100%">
+
+  - private mailbox
+  - private heap
+  - private GC (not blocking other processes)
+  - private immutable state
+
+]
+
+---
+
+.left-column[
+## Erlang VM
+### - Concurrency
+### - Processes
+### - Cluster
+]
+
+.right-column[
+
+  <img src="img/Erlang-distributed.png" width="100%">
+
+  - Clusterisation is standard OTP feature
+
+  - EPMD just works, developer don't care about details
+
+  - Function `send` is location-transparent
+
+  - PID contains info about process location
+
+  - Still **no shared memory**
+
+]
+
+---
+
+.left-column[
+## Erlang VM
+### - Concurrency
+### - Processes
+### - Cluster
+### - Links
+]
+
+.right-column[
+
+  <img src="img/link-exit.png" width="100%">
+
+  - By default process A knows nothing about problems in process B
+
+  - When process is terminated, it emits **exit signal** (like in normal OS)
+
+  - Standard functions `link` / `spawn_link` can establish link between processes
+
+  - Also we can catch exit signals using `Process.flag(:trap_exit, true)`
+
+]
+
+---
+
+.left-column[
+## Erlang VM
+### - Concurrency
+### - Processes
+### - Cluster
+### - Links
+### - Code swap
+]
+
+.right-column[
+
+  <img src="img/code-0.png" width="35%">
+  <img src="img/code-1.png" width="45%">
+  <img src="img/code-2.png" width="45%">
+  <img src="img/code-3.png" width="50%">
+
+]
+
+---
+
+.left-column[
+## Erlang VM
+### - Concurrency
+### - Processes
+### - Cluster
+### - Links
+### - Code swap
+### - OTP
+]
+
+.right-column[
+
+  <img src="img/OTP-troll.jpg" width="100%">
+
+]
+
+---
+
+.left-column[
+## Erlang VM
+### - Concurrency
+### - Processes
+### - Cluster
+### - Links
+### - Code swap
+### - OTP
+]
+
+.right-column[
+
+  <img src="img/sup.png" width="100%">
+
+]
+
+---
+
+class: center, middle
+
+# Thanks
 
     </textarea>
     <script src="js/remark-latest.min.js">
