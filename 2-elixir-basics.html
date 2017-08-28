@@ -371,7 +371,182 @@ iex> String.slice("hello world", 0, 4)
 
 .right-column[
 
+- each process has unique ID
 
+- PID contains full info about process location (node, host etc)
+
+```dark
+iex> self()
+#PID<0.80.0>
+
+iex> spawn fn() -> :ok end
+#PID<0.90.0>
+```
+
+]
+
+---
+
+.left-column[
+## Composite Types
+### - Lists
+]
+
+.right-column[
+
+- can include multiple types
+
+- linked lists
+
+- for length algorithm complexity is `O(n)` (linear)
+
+- special infix concatenation function
+
+- special infix subtraction function
+
+- to work with lists use List / Enum / Stream module
+
+```dark
+iex> list = [1, 2, :foo, "bar"]
+[1, 2, :foo, "bar"]
+
+iex> ["baz", 0] ++ list
+["baz", 0, 1, 2, :foo, "bar"]
+
+iex> list -- [2, :foo]
+[1, "bar"]
+```
+
+*always remember about O(n)!*
+
+```dark
+iex> bigger_list ++ smaller_list # bad usage
+
+iex> smaller_list ++ bigger_list # good usage
+```
+]
+
+---
+
+.left-column[
+## Composite Types
+### - Lists
+### - Tuples
+]
+
+.right-column[
+
+- collection of data stored contiguously in memory
+
+```dark
+iex> {3.14, :pie, "Apple"}
+{3.14, :pie, "Apple"}
+```
+
+- in real life mostly used tuples with length 2 (pairs)
+
+- agreement from Erlang - tuples with :ok / :error elements
+
+- records (based on tuples) - legacy from Erlang
+
+```dark
+iex> File.read("path/to/existing/file")
+{:ok, "... contents ..."}
+
+iex> File.read("path/to/unknown/file")
+{:error, :enoent}
+```
+
+]
+
+---
+
+.left-column[
+## Composite Types
+### - Lists
+### - Tuples
+### - Keywords
+]
+
+.right-column[
+
+- keyword list is list of pairs (tuples with length 2)
+
+- keys are atoms
+
+- keys are ordered
+
+- keys may not be unique
+
+- special syntax sugar
+
+- implements access protocol by key
+
+- to work with Keyword lists use Keyword module
+
+```dark
+iex> lst1 = [foo: "bar", hello: "world"]
+[foo: "bar", hello: "world"]
+
+iex> lst2 = [{:foo, "bar"}, {:hello, "world"}]
+[foo: "bar", hello: "world"]
+
+iex> lst1 == lst2
+true
+
+iex> lst1[:foo]
+"bar"
+```
+
+It's not real dictionary, it's just list of pairs. *Always remember about O(n)!*
+
+]
+
+---
+
+.left-column[
+## Composite Types
+### - Lists
+### - Tuples
+### - Keywords
+### - Maps
+]
+
+.right-column[
+
+- since 2014
+
+- real fast key-value storage
+
+- key / value can be any type
+
+```dark
+iex> map = %{:foo => "bar", "hello" => :world}
+%{:foo => "bar", "hello" => :world}
+
+iex> map[:foo]
+"bar"
+
+iex> map["hello"]
+:world
+```
+
+- special syntax sugar for atom keys
+
+- atom keys works faster (because of nature of atoms)
+
+```dark
+iex> map = %{foo: "bar", hello: "world"}
+%{foo: "bar", hello: "world"}
+
+iex> map.hello
+"world"
+
+iex> %{map | foo: "baz"}
+%{foo: "baz", hello: "world"}
+```
+
+- useful functions for maps are in Map / Enum modules
 
 ]
 
@@ -380,6 +555,7 @@ iex> String.slice("hello world", 0, 4)
 class: center, middle
 
 # Thanks
+[back to index](index.html)
 
     </textarea>
     <script src="js/remark-latest.min.js">
