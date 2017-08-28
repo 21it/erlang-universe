@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Elixir Basics</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+      .left-column h2:last-of-type, .left-column h3:last-child {
+        color: #000;
+      }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+.left-column[
+## Elixir
+### - History
+]
+
+.right-column[
+
+- founded by José Valim
+
+- since 2012
+
+- functional
+
+- compiles to BEAM (Erlang VM) bytecode
+
+- it's Erlang with Ruby syntax and Clojure (LISP) semantics
+
+.center[
+  <img src="img/elixir-ruby.png" width="100%">
+]
+]
+
+---
+
+.left-column[
+## Elixir
+### - History
+### - Typing
+]
+
+.right-column[
+.center[
+```
++---------------------------------------------------------+
+|                          Strong                         |
+|                            |                            |
+|                            |                            |
+|           Elixir           |          C#                |
+|           Erlang           |          F#                |
+|           Clojure          |          Java              |
+|           Python           |          Scala             |
+|           Ruby             |          Haskell           |
+|           Groovy           |                            |
+|                            |                            |
+|                            |                            |
+|Dynamic---------------------+----------------------Static|
+|                            |                            |
+|                            |                            |
+|                            |                            |
+|          Perl              |                            |
+|          PHP               |            C               |
+|          VB                |            C++             |
+|          JavaScript        |                            |
+|                            |                            |
+|                            |                            |
+|                            |                            |
+|                          Weak                           |
++---------------------------------------------------------+
+```
+]
+]
+
+---
+
+.left-column[
+## Types
+### - Integers
+]
+
+.right-column[
+
+Support for binary, octal, and hexadecimal numbers comes built in
+
+```dark
+iex> 255
+255
+iex> 0b0110
+6
+iex> 0o644
+420
+iex> 0x1F
+31
+```
+
+Integers inside Elixir are long with unlimited size
+
+```dark
+iex> 0x7FFFFFFFFFFFFFFF * 2
+18446744073709551614
+```
+
+- Underscores in numeric literals can improve the readability of code
+
+- Integer module is made to work with integers
+
+```dark
+iex> 1_000_000
+1000000
+iex> Integer.mod(5, 2)
+1
+```
+
+]
+
+---
+
+.left-column[
+## Types
+### - Integers
+### - Floats
+]
+
+.right-column[
+
+- Floating point numbers have 64-bit double precision
+
+- Support **e** for exponent values
+
+- Float module is made to work with floats
+
+```dark
+iex> 3.14
+3.14
+
+iex> 1.0e-10
+1.0e-10
+
+iex> Float.to_string(1.0)
+"1.0"
+```
+
+]
+
+---
+
+.left-column[
+## Types
+### - Integers
+### - Floats
+### - Atoms
+]
+
+.right-column[
+
+- An atom is a constant whose name is its value
+
+```dark
+iex> :foo
+:foo
+iex> :foo == :bar
+false
+iex> is_atom(:"atom with spaces")
+true
+iex> :"atom with spaces" == :'atom with spaces'
+true
+```
+
+- Names of modules in Elixir are also atoms
+
+- Elixir modules names capitalized
+
+- No colon needed for Elixir modules names
+
+- Erlang modules names are not capitalized (they are ordinary atoms)
+
+```dark
+iex> is_atom(MyApp.MyModule)
+true
+iex> :crypto.strong_rand_bytes(3)
+<<23, 104, 108>>
+```
+
+- Atom module is made to work with atoms
+
+]
+
+---
+
+.left-column[
+## Types
+### - Integers
+### - Floats
+### - Atoms
+]
+
+.right-column[
+
+- all atoms are contained in global table in ERTS instance
+
+- comparison between atoms is extremely fast (technically there is comparison by pointer)
+
+- atoms are very good as keys in data structures (fast comparison and pattern matching)
+
+- atoms are not handled by garbage collector
+
+- dynamic cast to atom is pretty dangerous (possible memory leak)
+
+```dark
+iex> data = "ok"
+"ok"
+
+iex> String.to_atom(data)           # Bad cast
+:ok
+
+iex> String.to_existing_atom(data)  # Good cast
+:ok
+```
+
+]
+
+---
+
+.left-column[
+## Types
+### - Integers
+### - Floats
+### - Atoms
+### - Booleans
+]
+
+.right-column[
+
+- technically Elixir does not have separate boolean type
+
+- just special syntax sugar for `true`, `false` and `nil` (no colon needed)
+
+- everything is truthy except for `false` and `nil`
+
+```dark
+iex> true
+true
+
+iex> false == :false
+true
+
+iex> nil == :nil
+true
+```
+
+]
+
+---
+
+.left-column[
+## Types
+### - Integers
+### - Floats
+### - Atoms
+### - Booleans
+### - Strings
+]
+
+.right-column[
+
+- technically Elixir does not have separate string type (strings are binaries)
+
+- binaries are array of bytes
+
+- double-quotes is sintax sugar for UTF-8 binaries
+
+- single-quote strings are Erlang legacy, almost never using in Elixir (list of chars, works extremely slow)
+
+```dark
+iex> is_binary("hello")
+true
+
+iex> is_list('hello')
+true
+
+iex> <<104, 101, 108, 108, 111>> == "hello"
+true
+
+iex> [104, 101, 108, 108, 111] == 'hello'
+true
+
+iex> "hello" == 'hello'
+false
+```
+
+]
+
+---
+
+.left-column[
+## Types
+### - Integers
+### - Floats
+### - Atoms
+### - Booleans
+### - Strings
+]
+
+.right-column[
+
+- interpolation and concatenation are supported
+
+```dark
+iex> data = "world"
+"world"
+
+iex> "hello #{data}"
+"hello world"
+
+iex> "hello "<>data
+"hello world"
+```
+
+- String module is made to work with strings
+
+```dark
+iex> String.split("hello world", " ")
+["hello", "world"]
+
+iex> String.slice("hello world", 0, 4)
+"hell"
+```
+
+]
+
+---
+
+.left-column[
+## Types
+### - Integers
+### - Floats
+### - Atoms
+### - Booleans
+### - Strings
+### - PIDs
+]
+
+.right-column[
+
+
+
+]
+
+---
+
+class: center, middle
+
+# Thanks
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
