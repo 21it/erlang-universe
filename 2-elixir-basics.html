@@ -552,6 +552,97 @@ iex> %{map | foo: "baz"}
 
 ---
 
+.left-column[
+## Composite Types
+### - Lists
+### - Tuples
+### - Keywords
+### - Maps
+### - Structs
+]
+
+.right-column[
+
+- custom datatype based on map
+
+- should be used for models instead of maps
+
+- compile-time checks and strictness
+
+```dark
+defmodule Banking.User do
+  defstruct name: "anon",
+            balance: 0,
+            pswdhash: <<>>
+end
+```
+
+- syntax looks like map + module name
+
+- support of default values
+
+```dark
+iex> %Banking.User{}
+%Banking.User{balance: 0, name: "anon", pswdhash: ""}
+```
+
+- special syntax for updates
+
+
+```dark
+iex> user = %Banking.User{balance: 100}
+%Banking.User{balance: 100, name: "anon", pswdhash: ""}
+
+iex> %Banking.User{user | name: "Foo", pswdhash: <<1, 2, 3>>}
+%Banking.User{balance: 100, name: "Foo", pswdhash: <<1, 2, 3>>}
+```
+
+]
+
+---
+
+.left-column[
+## Composite Types
+### - Lists
+### - Tuples
+### - Keywords
+### - Maps
+### - Structs
+]
+
+.right-column[
+
+- for dynamic dicts use map
+
+- for data models use structs
+
+- using of structs is very helpful in refactoring
+
+```dark
+defmodule Banking.User do
+  defstruct username: "anon",  # let's rename field
+            balance: 0,
+            pswdhash: <<>>
+end
+```
+
+- code with `name` field now gives compile error
+
+```dark
+iex> %Banking.User{name: "Foo"}
+** (KeyError) key :name not found in: %Banking.User{balance: 0, pswdhash: "", username: "anon"}
+
+iex> user = %Banking.User{}
+%Banking.User{balance: 0, pswdhash: "", username: "anon"}
+
+iex> %Banking.User{user | name: "Foo"}
+** (KeyError) key :name not found in: %Banking.User{balance: 0, pswdhash: "", username: "anon"}
+```
+
+]
+
+---
+
 class: center, middle
 
 # Thanks
