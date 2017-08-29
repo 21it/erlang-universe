@@ -643,6 +643,200 @@ iex> %Banking.User{user | name: "Foo"}
 
 ---
 
+.left-column[
+## Semantics
+### - Features
+]
+
+.right-column[
+
+- no statements
+
+- everything is an expression
+
+- completely immutable data
+
+- forget about variables
+
+- forget about loops
+
+- forget about return and goto
+
+.center[
+  <img src="img/erlang-meme.jpg" width="100%">
+]
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+]
+
+.right-column[
+
+- operator `=` is not assignment but match
+
+- like equals sign in algebra
+
+```dark
+iex> x = 1
+1
+
+iex> 1 = x
+1
+
+iex> 2 = x
+** (MatchError) no match of right hand side value: 1
+```
+
+- performs assignment when the left side of the match includes a variable
+
+- technically in Elixir there is variable rebinding (very bad practice)
+
+- variable still immutable (rebinded variable exists only after rebinding expression)
+
+```dark
+iex> x = 1
+1
+
+iex> x = 2 # it's other x!
+2
+```
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+]
+
+.right-column[
+
+- ofc pattern matching works with any elixir term
+
+```dark
+iex> list = [1, 2, 3]
+[1, 2, 3]
+
+iex> [a, b, c] = list
+[1, 2, 3]
+
+iex> a
+1
+```
+
+```dark
+iex> map = %{foo: "bar"}
+%{foo: "bar"}
+
+iex> %{foo: data} = map
+%{foo: "bar"}
+
+iex> data
+"bar"
+```
+
+```dark
+iex> tuple = {:ok, "baz"}
+{:ok, "baz"}
+
+iex> {:ok, data} = tuple
+{:ok, "baz"}
+
+iex> data
+"baz"
+```
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+]
+
+.right-column[
+
+- list is
+
+ - empty list or
+
+ - head element + tail where tail is list
+
+- special syntax to split lists
+
+```dark
+iex> [head | tail] = [1, 2, 3]
+[1, 2, 3]
+
+iex> head
+1
+
+iex> tail
+[2, 3]
+```
+
+- special syntax to construct lists
+
+```dark
+iex> list = [2, 3]
+[2, 3]
+
+iex> [1 | list]
+[1, 2, 3]
+
+iex> [1 | [2 | [3 | []]]] == [1, 2, 3]
+true
+```
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+]
+
+.right-column[
+
+- any structures can be pattern matched
+
+```dark
+iex> %Banking.User{name: name} = %Banking.User{}
+%Banking.User{balance: 0, name: "anon", pswdhash: ""}
+
+iex> name
+"anon"
+```
+
+- any nested data can be pattern matched too
+
+```dark
+iex> nested = {:ok, [%{foo: "bar", baz: "buf"}, 2, 3]}
+{:ok, [%{foo: "bar", baz: "buf"}, 2, 3]}
+
+iex> {:ok, [%{foo: data}|_]} = nested
+{:ok, [%{foo: "bar", baz: "buf"}, 2, 3]}
+
+iex> data
+"bar"
+```
+
+]
+
+---
+
 class: center, middle
 
 # Thanks
