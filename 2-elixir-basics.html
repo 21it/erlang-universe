@@ -680,7 +680,7 @@ iex> %Banking.User{user | name: "Foo"}
 
 - operator `=` is not assignment but match
 
-- like equals sign in algebra
+- like equals sign in algebra (left is right and right is left)
 
 ```dark
 iex> x = 1
@@ -831,6 +831,479 @@ iex> {:ok, [%{foo: data}|_]} = nested
 
 iex> data
 "bar"
+```
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+]
+
+.right-column[
+
+- if you need to avoid variable re-binding, use pin operator ^
+
+```dark
+iex> x = 1
+1
+
+iex> ^x = 2
+** (MatchError) no match of right hand side value: 2
+
+iex(2)> [^x | _] = [1, 2, 3]
+[1, 2, 3]
+
+iex(3)> [^x | _] = [3, 2, 1]
+** (MatchError) no match of right hand side value: [3, 2, 1]
+```
+
+- any variable can be pinned, including keys in maps
+
+```dark
+iex> key = "hello"
+"hello"
+
+iex> %{^key => value} = %{"hello" => "world"}
+%{"hello" => "world"}
+
+iex> value
+"world"
+
+iex> %{^key => value} = %{:hello => "world"}
+** (MatchError) no match of right hand side value: %{hello: "world"}
+```
+
+]
+
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+]
+
+.right-column[
+
+- p.m. can be performed on binary data / strings
+
+```dark
+iex> <<text::binary-size(5), rest::binary>> = "hello world"
+"hello world"
+
+iex> word
+"hello"
+
+iex> rest
+" world"
+```
+
+- ofc binaries can be pattern matched to other types
+
+```dark
+iex> bytes = :crypto.strong_rand_bytes(12)
+<<95, 117, 10, 38, 127, 241, 207, 91, 216, 58, 149, 36>>
+
+iex> <<a::32, b::32, c::32>> = bytes
+<<95, 117, 10, 38, 127, 241, 207, 91, 216, 58, 149, 36>>
+
+iex> seedvalue = {a, b, c}
+{2336848430, 4125942268, 2660123078}
+
+iex> :random.seed(seedvalue)
+:undefined
+```
+
+- binary p.m. is extra fast, but for complex tasks with strings it's better to use Regex module
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+### - Control
+]
+
+.right-column[
+
+- `if` / `unless` is not statement but expression
+
+- in Elixir everything is truthy except for `false` and `nil`
+
+```dark
+iex> if String.valid?("Hello") do
+...>   "Valid string!"
+...> else
+...>   "Invalid string."
+...> end
+"Valid string!"
+```
+
+- `unless` works on negative
+
+```dark
+iex> unless is_integer("hello") do
+...>   "Not an Int"
+...> end
+"Not an Int"
+```
+
+- without else when predicate not hit - implicitly returns `nil`
+
+```dark
+iex> if is_integer("hello") do
+...>   "Is Int"
+...> end
+nil
+```
+
+- it's strongly recommended to use `if` / `unless` **only for side-effect** expressions!
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+### - Control
+]
+
+.right-column[
+
+- `case` is not statement (like `switch`) but expression
+
+- accept as argument any Elixir term
+
+- each clause tries to pattern match data
+
+- if no one clause matches - exception
+
+```dark
+iex> user = %Banking.User{balance: 100, name: "Foo"}
+%Banking.User{balance: 100, name: "Foo", pswdhash: ""}
+
+iex> case user do
+...>   %Banking.User{name: "anon"} -> "User is not logged in"
+...>   %Banking.User{balance: 0} -> "User has zero balance"
+...>   %Banking.User{} -> "User is OK"
+...> end
+"User is OK"
+```
+
+- remember what pattern matching is performed **from top to bottom**
+
+- remember what unpinned variables **always** match
+
+```dark
+iex> case String.split("hello world") do
+...>   data -> "I will always match"
+...>   [word1, word2] -> "I will never match"
+...> end
+"I will always match"
+```
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+### - Control
+]
+
+.right-column[
+
+- in `case` expressions and functions can be used guard expressions
+
+- guards are simple pure functions from Erlang core
+
+- you can not use in guard expressions custom functions
+
+```dark
+iex> case {1, 2, 3} do
+...>   {1, x, 3} when x > 0 ->
+...>     "Will match"
+...>   _ ->
+...>     "Won't match"
+...> end
+"Will match"
+```
+
+```dark
+iex> case [1, 2, 3] do
+...>   [1, x, 3] when is_integer(x) ->
+...>     "Will match"
+...>   _ ->
+...>     "Won't match"
+...> end
+"Will match"
+```
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+### - Control
+]
+
+.right-column[
+
+- Elixir and Erlag have special variable `_`
+
+- it match any expression
+
+- it can't be assigned
+
+```dark
+iex> _ = 1
+1
+iex> _
+** (CompileError) iex:13: unbound variable _
+```
+
+- sometimes it's using in expressions to handle case what not match any pattern
+
+```dark
+iex> case {:ok, "Hello World"} do
+...>   {:ok, result} -> result
+...>   {:error} -> "Uh oh!"
+...>   _ -> "Catch all"
+...> end
+"Hello World"
+```
+
+- this is called *protective programming* / *defensive programming*
+
+- I strongly **not recommend** to use this pattern in Erlang / Elixir
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+### - Control
+]
+
+.right-column[
+
+- `cond` is used when we need to match conditions
+
+- like `else if` or `elsif` from other languages
+
+```dark
+iex> cond do
+...>   2 + 2 == 5 ->
+...>     "This will not be true"
+...>   2 * 2 == 3 ->
+...>     "Nor this"
+...>   1 + 1 == 2 ->
+...>     "But this will"
+...> end
+"But this will"
+```
+
+- will raise an error if there is no match (like `case` / `if`)
+
+
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+### - Control
+]
+
+.right-column[
+
+- `with` is special for for control flow
+
+- while patterns are matched, next expressions continue to execute
+
+```dark
+iex> user = %{first: "Sean", last: "Callan"}
+%{first: "Sean", last: "Callan"}
+
+iex> with {:ok, first} <- Map.fetch(user, :first),
+...>      {:ok, last} <- Map.fetch(user, :last) do
+...>   last <> ", " <> first
+...> else
+...>   error -> "something went wrong #{inspect error}"
+...> end
+"Callan, Sean"
+```
+
+- if expression not matched - return this value to `else` clauses
+
+```dark
+iex> user = %{first: "Sean"}
+%{first: "Sean"}
+
+iex> with {:ok, first} <- Map.fetch(user, :first),
+...>      {:ok, last} <- Map.fetch(user, :last) do
+...>   last <> ", " <> first
+...> else
+...>   error -> "something went wrong #{inspect error}"
+...> end
+"something went wrong :error"
+```
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+### - Control
+]
+
+.right-column[
+
+- pipe operator |> is special infix macros
+
+- get expression from left side and pass as 1st argument to expression in right side
+
+```dark
+infixl 0 |>
+(|>) a b = b $ a
+```
+
+- every function in standard Elixir library is designed to work with pipes
+
+```dark
+iex> Enum.sum(Enum.map(Enum.filter(1..100, &(rem(&1, 2) == 0)), &(&1 * 2)))
+5100
+
+iex> 1..100
+     |> Enum.filter(&(rem(&1, 2) == 0))
+     |> Enum.map(&(&1 * 2))
+     |> Enum.sum
+5100
+```
+
+- your custom functions also should be designed to work with pipes, it's good practice
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+### - Control
+### - Functions
+]
+
+.right-column[
+
+- 2 different syntax for anonymous functions
+
+```dark
+iex> sum = fn (a, b) -> a + b end
+iex> sum.(2, 3)
+5
+
+iex> sum = &(&1 + &2)
+iex> sum.(2, 3)
+5
+```
+
+- pattern matching can be used inside anonymous functions
+
+```dark
+iex> handle_result = fn
+...>   {:ok, result} -> IO.puts "Handling result..."
+...>   {:error} -> IO.puts "An error has occurred!"
+...> end
+
+iex> some_result = 1
+iex> handle_result.({:ok, some_result})
+Handling result...
+
+iex> handle_result.({:error})
+An error has occurred!
+```
+
+]
+
+---
+
+.left-column[
+## Semantics
+### - Features
+### - Pattern matching
+### - Binary P.M.
+### - Control
+### - Functions
+]
+
+.right-column[
+
+- named functions can be defined inside modules
+
+- function is its name + arity
+
+- `def` is public function
+
+- `defp` is private function
+
+- P.M. inside function args is supported
+
+- multiple clauses are supported
+
+- default arguments are supported (syntax sugar)
+
+```dark
+defmodule Greeter do
+  def hello(names) when is_list(names) do
+    names
+    |> Enum.join(", ")
+    |> hello
+  end
+
+  def hello(name) when is_binary(name) do
+    phrase() <> name
+  end
+
+  defp phrase, do: "Hello, "
+end
+
+iex> Greeter.hello ["Sean", "Steve"]
+"Hello, Sean, Steve"
 ```
 
 ]
