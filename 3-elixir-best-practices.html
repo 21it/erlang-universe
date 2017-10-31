@@ -197,6 +197,252 @@ template: beam-langs
 
 ---
 
+.left-column[
+## Elixir
+]
+
+.right-column.center[
+  ##### If language don't care about something - developer do this work manually.
+]
+
+---
+
+.left-column[
+## Elixir
+]
+
+.right-column.center[
+  ##### If language don't care about something - developer do this work manually.
+  <img src="img/rules-meme.jpg" width="70%">
+]
+
+---
+
+.left-column[
+## Elixir
+]
+
+.right-column.center[
+  ##### If language don't care about something - developer do this work manually.
+  <img src="img/rules-meme.jpg" width="70%">
+  #### yes
+]
+
+---
+
+.left-column[
+## Elixir
+### - Mix
+]
+
+.right-column[
+
+- always use [mix utility](http://elixir-lang.github.io/getting-started/mix-otp/introduction-to-mix.html)
+
+- mix generates project skeletons
+
+- mix is your package manager
+
+- mix is your compiler
+
+- mix is your tool to run tasks
+
+- interact with elixir code only using mix
+
+- probably if you need something, mix has task for it
+
+- write custom mix tasks if you need more
+
+```bash
+mix new foo --sup
+
+cd ./foo
+
+mix deps.get
+
+mix compile
+
+mix test
+
+iex -S mix
+```
+
+]
+
+---
+
+.left-column[
+## Elixir
+### - Mix
+### - Project
+]
+
+.right-column[
+
+- strict structure of project
+
+- all **not** elixir stuff (assets etc) in `./priv/` dir
+
+- to access `./priv/` dir use [:code.priv_dir](http://erlang.org/doc/man/code.html#priv_dir-1) function
+
+Please **not work with paths directly**, relative nodejs-like paths will not work in some cases.
+
+```bash
+.
+├── README.md
+├── _build                  <<< BEAM files bytecode
+├── config                  <<< ONLY .exs configs
+│   └── config.exs
+├── lib                     <<< ONLY .ex source
+│   ├── foo
+│   │   └── application.ex
+│   └── foo.ex
+├── mix.exs                 <<< main .exs config (deps etc)
+├── mix.lock                <<< never edit it manually !!!
+├── priv                    <<< all NOT elixir files here
+└── test                    <<< ONLY .exs tests
+    ├── foo_test.exs
+    └── test_helper.exs
+```
+]
+
+---
+
+.left-column[
+## Elixir
+### - Mix
+### - Project
+### - Compiler
+]
+
+.right-column[
+
+- **NEVER** ignore compiler warnings (except deps)
+
+- it's better to use `--warnings-as-errors` compiler flag
+
+```ruby
+defmodule BadMath do
+
+  def sum(x, y), do: x
+
+  def div(x, y), do: x / y
+  def div(_, 0), do: raise("division by zero")
+
+  def area(:circle, radius) do
+    Constants.pi * radius * radius
+  end
+
+  defp pi, do: 3.14
+
+end
+```
+
+```bash
+warning: function pi/0 is unused
+  lib/bad_math.ex:12
+
+warning: variable "y" is unused
+  lib/bad_math.ex:3
+
+warning: this clause cannot match because a previous clause at line 5 always matches
+  lib/bad_math.ex:6
+
+warning: function Constants.pi/0 is undefined (module Constants is not available)
+  lib/bad_math.ex:9
+```
+
+]
+
+---
+
+.left-column[
+## Elixir
+### - Mix
+### - Project
+### - Compiler
+### - Dialyzer
+]
+
+.right-column[
+
+- [Dialyzer](http://erlang.org/doc/man/dialyzer.html) is a static analysis tool
+
+- Designed by [HiPE](https://www.it.uu.se/research/group/hipe/) team in 2004
+
+- Unique type inference mechanism
+
+- **Not** Hindley-Milner or soft-typing type system
+
+```ruby
+@pi 3.14
+def area(:circle, radius) do
+  @pi * radius * radius
+end
+
+def volume(:cylinder, radius, height) do
+  area(:not_exist_shape_haha, radius) * height
+end
+```
+
+```bash
+lib/bad_math.ex:12: Function volume/3 has no local return
+
+lib/bad_math.ex:13: The call
+
+  'Elixir.BadMath':area(
+    'not_exist_shape_haha',
+    radius@1::any()
+  )
+
+  will never return since it differs in the 1st argument
+  from the success typing arguments:
+
+  ('circle',number())
+```
+
+]
+
+---
+
+.left-column[
+## Elixir
+### - Mix
+### - Project
+### - Compiler
+### - Dialyzer
+]
+
+.right-column[
+
+#### features
+
+- [Dialyxir](https://github.com/jeremyjh/dialyxir) mix task for Dialyzer
+
+- `@type` and `@spec` can be provided as documentation
+
+#### advantages
+
+- Can work **without** any type notations
+
+- Great, deep and detailed type inference
+
+- Can be applied to **any** BEAM VM based language
+
+#### disadvantages
+
+- code not 100% typed
+
+- new Elixir version always brings some Dialyzer bugs
+
+- code analysis is performed **very** slow
+
+- random fake errors are appearing from time to time
+
+]
+
+---
+
 class: center, middle
 
 # Thanks
