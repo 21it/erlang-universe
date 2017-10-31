@@ -441,6 +441,109 @@ lib/bad_math.ex:13: The call
 
 ---
 
+.left-column[
+## Elixir
+### - Mix
+### - Project
+### - Compiler
+### - Dialyzer
+### - ExUnit
+]
+
+.right-column[
+
+- tests decrease pain of dynamic typing (little bit)
+
+- tests simplify refactoring
+
+- tests are examples of usage of your app / lib
+
+- tests is kind of documentation
+
+- do not take too literally "let it fail" strategy
+
+.center[
+  <img src="img/erlang-let-it-fail-meme.jpg" width="70%">
+]
+
+]
+
+---
+
+.left-column[
+## Elixir
+### - Mix
+### - Project
+### - Compiler
+### - Dialyzer
+### - ExUnit
+]
+
+.right-column[
+
+##### features
+
+- usually `./test/` dir structure corresponds to `./lib/` dir
+
+- created new module? create new test file for it!
+
+- public functions should be tested explicitly
+
+- private functions can be tested only implicitly
+
+- three phases: setup, exercise, assert - [ExUnit](https://hexdocs.pm/ex_unit/ExUnit.html) macro
+
+```bash
+mix test ./test/bad_math_test.exs
+# runs specific test file
+
+mix test ./test/bad_math_test.exs:25
+# runs specific test in file in line 25
+```
+
+##### common pitfalls
+
+- test file should have only `.exs` extension
+
+- test file should have postfix `_test` on its name, example `bab_math_test.exs`
+
+- test module name should have postfix `Test`, example `BadMathTest`
+
+]
+
+---
+
+.left-column[
+## Elixir
+### - Mix
+### - Project
+### - Compiler
+### - Dialyzer
+### - ExUnit
+### - ExCoveralls
+]
+
+.right-column[
+
+- [ExCoveralls](https://github.com/parroty/excoveralls) is test coverage metric tool
+
+- minimal required test coverage is configurable (100% is recommended)
+
+- optional Coveralls service reports
+
+```bash
+mix coveralls.html
+# generates `cover.html` report with coverage details
+```
+
+.center[
+  <img src="img/excoveralls-example.png" width="80%">
+]
+
+]
+
+---
+
 class: center, middle
 
 # Thanks
