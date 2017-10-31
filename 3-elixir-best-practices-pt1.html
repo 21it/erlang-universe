@@ -544,6 +544,64 @@ mix coveralls.html
 
 ---
 
+.left-column[
+## Elixir
+### - Credo
+]
+
+.right-column[
+
+- [Credo](https://github.com/rrrene/credo) is code style checker
+
+- Configurable style rules
+
+- Tool not required but recommended for code-consistency
+
+- Maybe will be replaced with Elixir code [formatter](https://hashrocket.com/blog/posts/format-your-elixir-code-now?utm_campaign=elixir_radar_117&utm_medium=email&utm_source=RD+Station)
+
+.center[
+  <img src="img/credo.png" width="90%">
+]
+
+]
+
+---
+
+.left-column[
+## Elixir
+### - Credo
+### - All together
+]
+
+.right-column[
+
+- [Law](https://github.com/timCF/law)  is generator of ultra-safe Elixir projects
+
+- Law is completely based on standard mix new task and it's just another way to create new Elixir project
+
+- Includes all tools described above (configurable)
+
+- Includes strict `pre-commit` hook
+
+```bash
+#!/bin/sh
+export MIX_ENV=test
+mix deps.get &&
+mix deps.compile &&
+mix compile --warnings-as-errors &&
+mix credo --strict &&
+mix coveralls.html &&
+mix dialyzer --halt-exit-status
+```
+
+- CI workflow can be based on it
+
+- can be used locally
+
+]
+
+---
+
 class: center, middle
 
 # Thanks
