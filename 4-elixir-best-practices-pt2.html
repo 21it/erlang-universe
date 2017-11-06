@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Elixir Best Practices</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="img/favicon.ico"/>
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
+    <textarea id="source">
+
+.left-column[
+## Elixir
+]
+
+.right-column[
+
+- no statements
+
+- everything is an expression
+
+- source code is an expression too (AST)
+
+- completely immutable data
+
+- forget about variables
+
+- forget about loops (hello recursion)
+
+- forget about return and goto
+
+.center[
+  <img src="img/erlang-meme-wtf.jpg" width="50%">
+]
+
+]
+
+---
+
+.left-column[
+## Elixir
+### Pipe |>
+]
+
+.right-column[
+
+- pipe `|>` is special infix macros came from F#
+
+```haskell
+infixl 0 |>
+(|>) a b = b $ a
+```
+
+- we ❤️ `|>`
+
+- every function in Elixir is designed to work with |>
+
+- your functions also should be designed like this
+
+- subject should be always 1st argument
+
+- please no LISP in Elixir code)))))))))
+
+❌
+
+```elixir
+Enum.sum(Enum.map(Enum.filter(1..100, &(rem(&1, 2) == 0)), &(&1 * 2)))
+```
+
+✅
+
+```elixir
+1..100
+|> Enum.filter(&(rem(&1, 2) == 0))
+|> Enum.map(&(&1 * 2))
+|> Enum.sum
+```
+
+]
+
+---
+
+.left-column[
+## Elixir
+### Pipe |>
+### Assigns / PM
+]
+
+.right-column[
+
+- variables have no power anymore (immutable)
+
+- if value not reused > 1 times, assignment unnecessary
+
+- pattern matching better than assignment
+
+- pattern match only what you really need
+
+- pattern matching replaces tricky `if` / `else` / `=` / `==`
+
+- pattern matching make code more expressive
+
+- pattern mathing promotes Dialyzer type inference
+
+- we ❤️ pattern matching
+
+#### Use pattern matching as often as possible (not kidding)
+
+#### At the beginning try totally forget about assignments
+
+]
+
+---
+
+.left-column[
+## Elixir
+### Pipe |>
+### Assigns / PM
+]
+
+.right-column[
+
+❌
+
+```elixir
+def hello(user) do
+  if is_map(user) do
+    first_name = user.first_name
+    last_name = user.last_name
+    if is_binary(first_name) and is_binary(last_name) do
+      greetings = "Hello, #{first_name} #{last_name}"
+      {:ok, greetings}
+    else
+      {:error, :wrong_arguments}
+    end
+  else
+    {:error, :wrong_arguments}
+  end
+end
+```
+
+we do not need user variable, we need something inside it
+
+✅
+
+```elixir
+def hello(%{first_name: first_name, last_name: last_name})
+      when is_binary(first_name) and is_binary(last_name) do
+  {:ok, "Hello, #{first_name} #{last_name}"}
+end
+def hello(_) do
+  {:error, :wrong_arguments}
+end
+```
+
+]
+
+---
+
+.left-column[
+## Elixir
+### Pipe |>
+### Assigns / PM
+### If / Else
+]
+
+.right-column[
+
+- returns value as any expression
+
+- implicit `nil` when `else` was not provided
+
+- opinion: use **only** for side-effects stuff (ignore value)
+
+❌
+
+```elixir
+def hello(user) do
+  if user == "Joe" do
+    "Hello, father of Erlang!"
+  end
+  #
+  # forgot to provide else = implicit nil in runtime
+  # very common mistake, no compiler warnings
+  #
+end
+```
+
+✅
+
+```elixir
+def hello(user, notation) do
+  if notation == :warning do
+    Rabbit.send(:suspicious, user)
+    Logger.warn("suspicious user #{user}")
+  end
+  "Hello, #{user}"
+end
+```
+
+]
+
+---
+
+.left-column[
+## Elixir
+### Pipe |>
+### Assigns / PM
+### If / Else
+### Case
+]
+
+.right-column[
+
+- returns value as any expression
+
+- should be used when you care about expression value
+
+- most commonly used flow control expression in Elixir
+
+- ❤️ unlike if / else do not have implicit return value
+
+- ❤️ pattern matching in case clauses
+
+- ❤️ guard expressions in case clauses
+
+.center[
+  <img src="img/switch-case-futurama.jpeg" width="80%">
+]
+
+]
+
+---
+
+.left-column[
+## Elixir
+### Pipe |>
+### Assigns / PM
+### If / Else
+### Case
+]
+
+.right-column[
+
+❌
+
+```elixir
+def hello(json) when is_binary(json) do
+  result = Poison.decode(json)
+  if elem(result, 0) == :ok do
+    data = elem(result, 1)
+    if is_map(data) do
+      first_name = data["first_name"]
+      last_name = data["last_name"]
+      cond do
+        (first_name == "Joe") and (last_name == "Armstrong") ->
+          {:ok, "Hello, father of Erlang!"}
+        is_binary(first_name) and is_binary(last_name) ->
+          {:ok, "Hello, #{first_name} #{last_name}"}
+        true ->
+          {:error, data}
+      end
+    else
+      {:error, error}
+    end
+  else
+    {:error, error}
+  end
+end
+```
+
+]
+
+---
+
+.left-column[
+## Elixir
+### Pipe |>
+### Assigns / PM
+### If / Else
+### Case
+]
+
+.right-column[
+
+✅
+
+```elixir
+def hello(json) when is_binary(json) do
+  case Poison.decode(json) do
+    {:ok, %{"first_name" => "Joe", "last_name" => "Armstrong"}} ->
+      {:ok, "Hello, father of Erlang!"}
+    {:ok, %{"first_name" => first_name, "last_name" => last_name}}
+      when is_binary(first_name) and is_binary(last_name) ->
+        {:ok, "Hello, #{first_name} #{last_name}"}
+    error ->
+      {:error, error}
+  end
+end
+```
+
+]
+
+---
+
+.left-column[
+## Elixir
+### Pipe |>
+### Assigns / PM
+### If / Else
+### Case
+]
+
+.right-column[
+
+- `case do` is expression so can be piped `|>`
+
+❌
+
+```elixir
+def badmath(x) do
+  result = 1..x
+  |> Enum.filter(&(rem(&1, 2) == 0))
+  |> Enum.map(&(&1 * 2))
+  |> Enum.sum
+  case result < @limit do
+    true -> "too low"
+    false -> "ok"
+  end
+end
+```
+
+✅
+
+```elixir
+def badmath(x) do
+  1..x
+  |> Enum.filter(&(rem(&1, 2) == 0))
+  |> Enum.map(&(&1 * 2))
+  |> Enum.sum
+  |> case do
+    result when result < @limit -> "too low"
+    _ -> "ok"
+  end
+end
+```
+
+]
+
+---
+
+class: center, middle
+
+# Thanks
+[back to index](index.html)
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
