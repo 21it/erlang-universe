@@ -698,6 +698,264 @@ end
 
 ---
 
+.left-column[
+  ### Structures
+  ### Access
+  ### Configs / Env
+]
+
+.right-column[
+
+❌
+
+```elixir
+defmodule API do
+
+  def trx(params = %{}) do
+    host = System.get_env("API_HOST")
+    port = System.get_env("API_PORT")
+    trx_url = "http://#{host}:#{port}/trx"
+    request = Poison.encode!(params)
+    headers = ["X-Signature": sign(request)]
+    %HTTPoison.Response{body: response} =
+      HTTPoison.post!(trx_url, request, headers)
+    Poison.decode!(response)
+  end
+
+  defp sign(data) do
+    privkey = "#{:code.priv_dir(:api)}/privkey.pem"
+              |> File.read!
+    :crypto.sign(:rsa, :sha256, data, privkey)
+  end
+
+end
+```
+
+- behaviuor depends on system env
+
+- 👎 unpredictable runtime
+
+- 👎 function-call overhead
+
+- 👎 file-system io overhead
+
+]
+
+---
+
+.left-column[
+  ### Structures
+  ### Access
+  ### Configs / Env
+  ### Constants
+]
+
+.right-column[
+
+❌
+
+```elixir
+defmodule API do
+
+  @host     System.get_env("API_HOST")
+  @port     System.get_env("API_PORT") |> String.to_integer
+  @trx_url  "http://#{@host}:#{@port}/trx"
+  @privkey  "#{:code.priv_dir(:api)}/privkey.pem"
+            |> File.read
+            |> elem(1)
+
+  def trx(params = %{}) do
+    request = Poison.encode!(params)
+    %HTTPoison.Response{body: response} =
+      HTTPoison.post!(@trx_url, request, ["X-Signature": sign(request)])
+    Poison.decode!(response)
+  end
+
+  defp sign(data) do
+    :crypto.sign(:rsa, :sha256, data, @privkey)
+  end
+
+end
+```
+
+- overhead was removed
+
+- `@attr` is inline of expression value directly to code
+
+- 👎 runtime is still unpredictable (in case of wrong env)
+
+]
+
+---
+
+.left-column[
+  ### Structures
+  ### Access
+  ### Configs / Env
+  ### Constants
+]
+
+.right-column[
+
+❌
+
+```elixir
+defmodule API do
+
+  @host     (
+    value = System.get_env("API_HOST")
+    true = is_binary(value) and Validator.validate_hostname(value)
+    value
+  )
+
+  @port     (
+    value = System.get_env("API_PORT") |> String.to_integer
+    true = is_integer(value) and (value > 0)
+    value
+  )
+
+  @trx_url  "http://#{@host}:#{@port}/trx"
+
+  @privkey  "#{:code.priv_dir(:api)}/privkey.pem"
+            |> File.read!
+
+  ...
+
+end
+```
+
+- overhead was removed
+
+- validate env variables in compile time
+
+- 👎 type checks is some kind of boilerplate
+
+]
+
+---
+
+.left-column[
+  ### Structures
+  ### Access
+  ### Configs / Env
+  ### Constants
+]
+
+.right-column[
+
+[Constantine](https://github.com/timCF/constantine) provides type-safe constants in Elixir.
+
+```elixir
+defmodule API do
+
+  import Constantine, only: [const: 2]
+  const :string,      @host     System.get_env("API_HOST")
+  const :pos_integer, @port     System.get_env("API_PORT")
+                                |> String.to_integer
+  const :string,      @trx_url  "http://#{@host}:#{@port}/trx"
+  const :binary,      @privkey  "#{:code.priv_dir(:api)}/privkey.pem"
+                                |> File.read!
+
+  def trx(params = %{}) do
+    request = Poison.encode!(params)
+    %HTTPoison.Response{body: response} =
+      HTTPoison.post!(@trx_url, request, ["X-Signature": sign(request)])
+    Poison.decode!(response)
+  end
+
+  defp sign(data) do
+    :crypto.sign(:rsa, :sha256, data, @privkey)
+  end
+
+end
+```
+
+]
+
+---
+
+.left-column[
+  ### Structures
+  ### Access
+  ### Configs / Env
+  ### Constants
+  ### Module attrs
+]
+
+.right-column[
+
+- executes in compile-time
+
+- direct inline values to code
+
+- compile warnings for undefined attrs
+
+- readable in code (syntax highlighting etc)
+
+- module attr can be used in other module attr
+
+- can be used in pattern matching
+
+- 👎 can be redefined
+
+- 👎 cannot be exported
+
+.center[
+  <img src="img/const-meme.jpeg" width="70%">
+]
+
+]
+
+---
+
+.left-column[
+  ### Structures
+  ### Access
+  ### Configs / Env
+  ### Constants
+  ### Module attrs
+  ### Const macro
+]
+
+.right-column[
+
+✅
+
+```elixir
+defmacro pi do
+  value = Application.get_env(:bad_math, :pi)
+  true = is_float(value) and (value > 0)
+  quote do
+    unquote(pi)
+  end
+end
+```
+
+✅
+
+```elixir
+defmodule API do
+
+  import Constantine, only: [const: 2]
+  const :binary,      privkey  "#{:code.priv_dir(:api)}/privkey.pem"
+                               |> File.read!
+
+  ...
+
+end
+
+defmodule API.Crypto do
+  require API
+  def sign(data) do
+    :crypto.sign(:rsa, :sha256, data, API.privkey())
+  end
+end
+```
+
+]
+
+---
+
 class: center, middle
 
 # Thanks
