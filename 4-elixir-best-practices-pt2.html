@@ -526,7 +526,173 @@ end
 
 - guards are supported
 
-- should be used when > 1 operation (else use case)
+- should be used when > 1 operation (else use `case`)
+
+]
+
+---
+
+name: compiletime
+
+.left-column[
+
+]
+
+.right-column[
+
+.center[
+  ### Elixir
+]
+
+- 👎 dynamic typing
+
+- 👎 no classes
+
+- 👎 no constants
+
+.center[
+  ### How to?
+]
+
+- make code more strict
+
+- make code refactorable
+
+- make runtime more predictable
+
+]
+
+---
+
+template: compiletime
+
+.right-column.center[
+
+#### Compiler can do this in compile-time!
+(if you know some tricks)
+
+]
+
+---
+
+.left-column[
+  ### Structures
+]
+
+.right-column[
+
+- Elixir structures are compile-time citizens
+
+- Default values supported
+
+- Compile-time checks of fields in PM and literals
+
+- Easy refactoring
+
+- Model with static amount of fields? **Use structure!**
+
+❌
+
+```elixir
+user = %{first_name: "Joe", last_name: "Armstrong"}
+```
+
+✅
+
+```elixir
+defmodule User do
+  defstruct first_name: "Joe",
+            last_name: "Armstrong"
+end
+
+iex(2)> %User{}
+%User{first_name: "Joe", last_name: "Armstrong"}
+```
+
+]
+
+---
+
+.left-column[
+  ### Structures
+]
+
+.right-column[
+
+- **Never** use access protocol with structures
+
+- golden rule : always use pattern matching
+
+❌
+
+```elixir
+"Hello #{user.first_name} #{user.last_name}!"
+
+"Hello #{user[:first_name]} #{user[:last_name]}!"
+
+# still compiles without warnings...
+
+"Hello #{user.fooooooooo} #{user.baaaaar}!"
+
+"Hello #{user[:fooooooooo]} #{user[:baaaaar]}!"
+```
+
+✅
+
+```elixir
+%User{first_name: first_name, last_name: last_name} = user
+
+"Hello #{first_name} #{last_name}!"
+
+# gotcha!!! compile error here
+
+%User{fooooooooo: first_name, baaaaar: last_name} = user
+```
+
+]
+
+---
+
+.left-column[
+  ### Structures
+  ### Access
+]
+
+.right-column[
+
+- opinion: **to not use** access protocol in Elixir
+
+- implicit `nil` if value is not presented
+
+- PM + guards make runtime more predictable
+
+- PM + guards make code more readable
+
+- PM + guards promotes Dialyzer type inference
+
+.center[
+  Pattern matching + guards is better than access protocol.
+]
+
+```elixir
+users_balances = %{joe: 100, mike: 50}
+```
+
+❌
+
+```elixir
+"Joe has balance #{users_balances.joe}"
+"Joe has balance #{users_balances[:joe]}"
+```
+
+✅
+
+```elixir
+case Map.fetch(users_balances, :joe) do
+  {:ok, value} when is_integer(value) -> "Joe has balance #{value}"
+  :error -> "Joe is not presented yet"
+end
+```
 
 ]
 
