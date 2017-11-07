@@ -479,10 +479,56 @@ end
 
 .right-column[
 
+❌
 
+<img src="img/streetfighter-meme.jpg" width="100%">
+
+Typical PHP code.
+Of course there is a lot of Elixir / Erlang code like this.
 
 ]
 
+---
+
+.left-column[
+### Pipe |>
+### Assigns / PM
+### Functions
+### If / Else
+### Cond
+### Case
+### With
+]
+
+.right-column[
+
+✅
+
+```elixir
+with {:ok, first} when is_binary(first) <-
+       Map.fetch(user, :first),
+     {:ok, last} when is_binary(last) <-
+       Map.fetch(user, :last),
+     {:ok, %HTTPoison.Response{status_code: 200, body: body}} <-
+       HTTPoison.get("http://hello.ee/#{first}/#{last}") do
+  {:ok, body}
+else
+  {:error, response = %HTTPoison.Response{}} ->
+    {:error, "something went wrong with http request #{inspect response}"}
+  error ->
+    {:error, "something went wrong with user #{inspect error}"}
+end
+```
+
+- `with` is special expression to avoid streetfighter style
+
+- pattern matching is supported
+
+- guards are supported
+
+- should be used when > 1 operation (else use case)
+
+]
 
 ---
 
