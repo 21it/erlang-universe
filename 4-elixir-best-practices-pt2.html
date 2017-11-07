@@ -928,7 +928,7 @@ defmacro pi do
   value = Application.get_env(:bad_math, :pi)
   true = is_float(value) and (value > 0)
   quote do
-    unquote(pi)
+    unquote(value)
   end
 end
 ```
