@@ -175,9 +175,9 @@ def fac(data) do
     1
   else
     if is_integer(data) and (data > 0) do
-      data * fac(data = 1)
+      data * fac(data - 1)
     else
-      raise("wrong argument")
+      raise("wrong argument #{inspect data}")
     end
   end
 end
@@ -188,9 +188,9 @@ end
 ```elixir
 def fac(0), do: 1
 def fac(data) when is_integer(data) and (data > 0) do
-  data * fac(data = 1)
+  data * fac(data - 1)
 end
-def fac(_), do: raise("wrong argument")
+def fac(data), do: raise("wrong argument #{inspect data}")
 ```
 
 ]
