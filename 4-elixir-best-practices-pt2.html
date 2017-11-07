@@ -10,7 +10,6 @@
     <textarea id="source">
 
 .left-column[
-## Elixir
 ]
 
 .right-column[
@@ -38,7 +37,6 @@
 ---
 
 .left-column[
-## Elixir
 ### Pipe |>
 ]
 
@@ -81,7 +79,6 @@ Enum.sum(Enum.map(Enum.filter(1..100, &(rem(&1, 2) == 0)), &(&1 * 2)))
 ---
 
 .left-column[
-## Elixir
 ### Pipe |>
 ### Assigns / PM
 ]
@@ -113,7 +110,6 @@ Enum.sum(Enum.map(Enum.filter(1..100, &(rem(&1, 2) == 0)), &(&1 * 2)))
 ---
 
 .left-column[
-## Elixir
 ### Pipe |>
 ### Assigns / PM
 ]
@@ -158,9 +154,88 @@ end
 ---
 
 .left-column[
-## Elixir
 ### Pipe |>
 ### Assigns / PM
+### Functions
+]
+
+.right-column[
+
+- smaller functions are more readable
+
+- special ability - multiple function clauses
+
+- pattern matching + guards in function clauses
+
+❌
+
+```elixir
+def fac(data) do
+  if data == 0 do
+    1
+  else
+    if is_integer(data) and (data > 0) do
+      data * fac(data = 1)
+    else
+      raise("wrong argument")
+    end
+  end
+end
+```
+
+✅
+
+```elixir
+def fac(0), do: 1
+def fac(data) when is_integer(data) and (data > 0) do
+  data * fac(data = 1)
+end
+def fac(_), do: raise("wrong argument")
+```
+
+]
+
+---
+
+.left-column[
+### Pipe |>
+### Assigns / PM
+### Functions
+]
+
+.right-column[
+
+❌
+
+```elixir
+def map(data, func) do
+  if length(data) == 0 do
+    []
+  else
+    {head, tail} = List.pop_at(data, 0)
+    [func.(data)]
+    |> Enum.concat(map(tail, func))
+  end
+end
+```
+
+✅
+
+```elixir
+def map([], _), do: []
+def map([head|tail], func) when is_function(func, 1) do
+  [func.(head)|map(tail)]
+end
+```
+
+]
+
+---
+
+.left-column[
+### Pipe |>
+### Assigns / PM
+### Functions
 ### If / Else
 ]
 
@@ -203,10 +278,50 @@ end
 ---
 
 .left-column[
-## Elixir
 ### Pipe |>
 ### Assigns / PM
+### Functions
 ### If / Else
+### Cond
+]
+
+.right-column[
+
+- returns value as any expression
+
+- `cond` is used when we need to match conditions
+
+- like `else if` or `elsif` from other languages
+
+- not functional style, no pattern matching
+
+- I used `cond` only 2-3 times in my Elixit career
+
+- usually `case` expression is more preferred
+
+```elixir
+cond do
+  2 + 2 == 5 ->
+    "This will not be true"
+  2 * 2 == 3 ->
+    "Nor this"
+  1 + 1 == 2 ->
+    "But this will"
+  true ->
+    "This default clause will never match"
+end
+```
+
+]
+
+---
+
+.left-column[
+### Pipe |>
+### Assigns / PM
+### Functions
+### If / Else
+### Cond
 ### Case
 ]
 
@@ -233,10 +348,11 @@ end
 ---
 
 .left-column[
-## Elixir
 ### Pipe |>
 ### Assigns / PM
+### Functions
 ### If / Else
+### Cond
 ### Case
 ]
 
@@ -274,10 +390,11 @@ end
 ---
 
 .left-column[
-## Elixir
 ### Pipe |>
 ### Assigns / PM
+### Functions
 ### If / Else
+### Cond
 ### Case
 ]
 
@@ -304,16 +421,17 @@ end
 ---
 
 .left-column[
-## Elixir
 ### Pipe |>
 ### Assigns / PM
+### Functions
 ### If / Else
+### Cond
 ### Case
 ]
 
 .right-column[
 
-- `case do` is expression so can be piped `|>`
+- `case` is expression so can be piped `|>`
 
 ❌
 
@@ -346,6 +464,25 @@ end
 ```
 
 ]
+
+---
+
+.left-column[
+### Pipe |>
+### Assigns / PM
+### Functions
+### If / Else
+### Cond
+### Case
+### With
+]
+
+.right-column[
+
+
+
+]
+
 
 ---
 
