@@ -40,3 +40,13 @@ a, a > code {
   border-radius: 10px;
   padding-bottom: 10px;
 }
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color: white;
+  text-align: center;
+}
