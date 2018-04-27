@@ -465,6 +465,152 @@
 
 ---
 
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+### Solutions
+
+]
+
+.right-column[
+
+```elixir
+@spec factorial(non_neg_integer()) :: non_neg_integer()
+
+def factorial(0), do: 1
+def factorial(n), do: :bar
+```
+
+.center[
+
+actually is
+
+]
+
+```elixir
+{:__block__, [],
+ [
+   {:@, [line: 1],
+    [
+      {:spec, [line: 1],
+       [
+         {:::, [line: 1],
+          [
+            {:factorial, [line: 1], [{:non_neg_integer, [line: 1], []}]},
+            {:non_neg_integer, [line: 1], []}
+          ]}
+       ]}
+    ]},
+   {:def, [line: 3], [{:factorial, [line: 3], [0]}, [do: 1]]},
+   {:def, [line: 4],
+    [{:factorial, [line: 4], [{:n, [line: 4], nil}]}, [do: :bar]]}
+ ]}
+```
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+### Solutions
+
+]
+
+.right-column[
+
+```elixir
+@type t :: %Transaction{
+  amount: non_neg_integer(),
+  currency: currency(),
+  reference: Transaction.t
+}
+```
+
+.center[
+
+actually is
+
+]
+
+```elixir
+{:@, [line: 1],
+ [
+   {:type, [line: 1],
+    [
+      {:::, [line: 1],
+       [
+         {:t, [line: 1], nil},
+         {:%, [line: 1],
+          [
+            {:__aliases__, [line: 1], [:Transaction]},
+            {:%{}, [line: 1],
+             [
+               amount: {:non_neg_integer, [line: 2], []},
+               currency: {:currency, [line: 3], []},
+               reference: {{:., [line: 4],
+                 [{:__aliases__, [line: 4], [:Transaction]}, :t]}, [line: 4],
+                []}
+             ]}
+          ]}
+       ]}
+    ]}
+ ]}
+```
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+### Solutions
+
+]
+
+.right-column[
+
+.center[
+  ## Conclusion
+]
+
+- Elixir @type nonations are awesome ❤️❤️❤️
+
+- Dialyzer is only one static analysis tool for BEAM and it sucks
+
+- But Dialyzer is much more better than nothing
+
+- <strong>Elixir compiler needs native support of typecheks based on @type and @spec notations</strong>
+
+- Tool "like Dialyzer but better" is also acceptable option
+
+]
+
+---
+
 class: center, middle
 
 # Thanks
