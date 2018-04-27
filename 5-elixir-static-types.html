@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Elixir Best Practices</title>
+    <title>Elixir static types</title>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="img/favicon.ico"/>
     <link rel="stylesheet" href="css/app.css">
@@ -88,14 +88,142 @@
 
 ### Dynamic type system
 
-### Problems
+### Too dynamic
 
 ]
 
 .right-column[
 
 .center[
-  ## TODO
+
+  <img src="img/too-dynamic.png" width="40%">
+  <img src="img/dynamic-typing-meme.jpeg" width="40%">
+  <img src="img/js-implicit-conversions.png" width="100%">
+
+]
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+]
+
+.right-column[
+
+- Facebook: [Flow](https://flow.org/), [REason](https://reasonml.github.io/)
+
+- Microsoft: [TypeScript](https://www.typescriptlang.org/)
+
+- Google: [Dart](https://www.dartlang.org/)
+
+- Zend Technologies: [PHP7](http://php.net/manual/en/migration70.new-features.php)
+
+- Ericsson: ???
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+]
+
+.right-column[
+
+- Facebook: [Flow](https://flow.org/), [REason](https://reasonml.github.io/)
+
+- Microsoft: [TypeScript](https://www.typescriptlang.org/)
+
+- Google: [Dart](https://www.dartlang.org/)
+
+- Zend Technologies: [PHP7](http://php.net/manual/en/migration70.new-features.php)
+
+- Ericsson: [Dialyzer](http://erlang.org/doc/man/dialyzer.html)
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+]
+
+.right-column[
+
+```elixir
+@type currency :: :BTC | :USD | :EUR
+
+@type t :: %Transaction{
+  amount: non_neg_integer(),
+  currency: currency(),
+  reference: Transaction.t
+}
+```
+
+- built-in + custom types
+
+- algebraic types
+
+- recursive types
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+]
+
+.right-column[
+
+```elixir
+@type currency :: :BTC | :USD | :EUR
+
+@type t :: %Transaction{
+  amount: non_neg_integer(),
+  currency: currency(),
+  reference: Transaction.t
+}
+```
+
+- built-in + custom types
+
+- algebraic types
+
+- recursive types
+
+.center[
+  <img src="img/haskell-chan.jpeg" width="50%">
 ]
 
 ]
