@@ -118,15 +118,15 @@
 
 .right-column[
 
-- Facebook: [Flow](https://flow.org/), [REason](https://reasonml.github.io/)
+- JS - Facebook: [Flow](https://flow.org/), [REason](https://reasonml.github.io/)
 
-- Microsoft: [TypeScript](https://www.typescriptlang.org/)
+- JS - Microsoft: [TypeScript](https://www.typescriptlang.org/)
 
-- Google: [Dart](https://www.dartlang.org/)
+- JS - Google: [Dart](https://www.dartlang.org/)
 
-- Zend Technologies: [PHP7](http://php.net/manual/en/migration70.new-features.php)
+- PHP - Zend Technologies: [PHP7](http://php.net/manual/en/migration70.new-features.php)
 
-- Ericsson: ???
+- Erlang - Ericsson: ???
 
 ]
 
@@ -144,15 +144,23 @@
 
 .right-column[
 
-- Facebook: [Flow](https://flow.org/), [REason](https://reasonml.github.io/)
+- JS - Facebook: [Flow](https://flow.org/), [REason](https://reasonml.github.io/)
 
-- Microsoft: [TypeScript](https://www.typescriptlang.org/)
+- JS - Microsoft: [TypeScript](https://www.typescriptlang.org/)
 
-- Google: [Dart](https://www.dartlang.org/)
+- JS - Google: [Dart](https://www.dartlang.org/)
 
-- Zend Technologies: [PHP7](http://php.net/manual/en/migration70.new-features.php)
+- PHP - Zend Technologies: [PHP7](http://php.net/manual/en/migration70.new-features.php)
 
-- Ericsson: [Dialyzer](http://erlang.org/doc/man/dialyzer.html)
+- Erlang - Ericsson: [Dialyzer](http://erlang.org/doc/man/dialyzer.html)
+
+- Elixir - Heathmont: ???
+
+.center[
+
+  <img src="img/question-meme.jpg" width="60%">
+
+]
 
 ]
 
@@ -224,6 +232,198 @@
 
 .center[
   <img src="img/haskell-chan.jpeg" width="50%">
+]
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+]
+
+.right-column[
+
+.middle[
+
+  ```elixir
+  @spec factorial(non_neg_integer()) :: non_neg_integer()
+
+  def factorial(0), do: 1
+  def factorial(n), do: n * factorial(n - 1)
+  ```
+
+]
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+]
+
+.right-column[
+
+.middle[
+
+  ```elixir
+  @spec factorial(non_neg_integer()) :: non_neg_integer()
+
+  def factorial(0), do: :foo
+  def factorial(n), do: :bar
+  ```
+
+  .center[
+
+    then Dialyzer says
+
+  ]
+
+  ```
+  lib/hello.ex:16:
+  Invalid type specification
+  for function 'Elixir.Hello':factorial/1.
+
+  The success typing is (_) -> 'bar' | 'foo'
+  ```
+
+]
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+]
+
+.right-column[
+
+.middle[
+
+  ```elixir
+  @spec factorial(non_neg_integer()) :: non_neg_integer()
+
+  def factorial(0), do: :foo
+  def factorial(n), do: :bar
+  ```
+
+  .center[
+
+    then Dialyzer says
+
+  ]
+
+  ```
+  lib/hello.ex:16:
+  Invalid type specification
+  for function 'Elixir.Hello':factorial/1.
+
+  The success typing is (_) -> 'bar' | 'foo'
+  ```
+
+]
+
+.center[
+  <img src="img/deal-with-it.gif" width="100%">
+]
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+]
+
+.right-column[
+
+.middle[
+
+  ```elixir
+  @spec factorial(non_neg_integer()) :: non_neg_integer()
+
+  def factorial(0), do: 1
+  def factorial(n), do: :bar
+  ```
+
+  .center[
+
+    then Dialyzer says
+
+  ]
+
+  ```
+  done (passed successfully)
+  ```
+
+]
+
+.center[
+  <img src="img/travolta-meme.gif" width="70%">
+]
+
+]
+
+---
+
+.left-column[
+
+### Dynamic type system
+
+### Too dynamic
+
+### Static tools/compilers
+
+### Dialyzer
+
+]
+
+.right-column[
+
+.middle[
+  .center[
+    ## Success Typings
+  ]
+  Dialyzer based on [whitepaper](http://www.it.uu.se/research/group/hipe/papers/succ_types.pdf) from [Uppsala University](https://www.it.uu.se/research/group/hipe/), Sweden.
+  Idea is optimistic type checking. If it can find at least <strong>ONE</strong> route through the code which type checks, then it is happy.
+]
+
+.center[
+  <img src="img/this-is-fine-meme.gif" width="60%">
 ]
 
 ]
