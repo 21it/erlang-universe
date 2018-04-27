@@ -255,7 +255,7 @@
 .middle[
 
   ```elixir
-  @spec factorial(non_neg_integer()) :: non_neg_integer()
+  @spec factorial(non_neg_integer()) :: pos_integer()
 
   def factorial(0), do: 1
   def factorial(n), do: n * factorial(n - 1)
@@ -284,7 +284,7 @@
 .middle[
 
   ```elixir
-  @spec factorial(non_neg_integer()) :: non_neg_integer()
+  @spec factorial(non_neg_integer()) :: pos_integer()
 
   def factorial(0), do: :foo
   def factorial(n), do: :bar
@@ -327,7 +327,7 @@
 .middle[
 
   ```elixir
-  @spec factorial(non_neg_integer()) :: non_neg_integer()
+  @spec factorial(non_neg_integer()) :: pos_integer()
 
   def factorial(0), do: :foo
   def factorial(n), do: :bar
@@ -374,7 +374,7 @@
 .middle[
 
   ```elixir
-  @spec factorial(non_neg_integer()) :: non_neg_integer()
+  @spec factorial(non_neg_integer()) :: pos_integer()
 
   def factorial(0), do: 1
   def factorial(n), do: :bar
@@ -482,7 +482,7 @@
 .right-column[
 
 ```elixir
-@spec factorial(non_neg_integer()) :: non_neg_integer()
+@spec factorial(non_neg_integer()) :: pos_integer()
 
 def factorial(0), do: 1
 def factorial(n), do: :bar
@@ -504,7 +504,7 @@ actually is
          {:::, [line: 1],
           [
             {:factorial, [line: 1], [{:non_neg_integer, [line: 1], []}]},
-            {:non_neg_integer, [line: 1], []}
+            {:pos_integer, [line: 1], []}
           ]}
        ]}
     ]},
