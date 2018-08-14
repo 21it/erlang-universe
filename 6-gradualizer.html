@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gradualizer</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="img/favicon.ico"/>
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
+    <textarea id="source">
+
+.center[
+  ### Let's build static type system for Erlang VM!
+  <img src="img/langs-chan.jpg" width="75%">
+  ### Now Erlang looks like Haskell, isn't it?
+]
+
+---
+
+.center[
+  ### Gradual typing
+]
+
+Gradual Typing is a method for mixing static and dynamic typing
+
+- Start out with a dynamically typed small program
+
+- As the program grow larger, gradually add type signatures to make it more statically typed
+
+<img src="img/python-chan.jpg" width="32%">
+<img src="img/php-chan.jpg" width="32%">
+<img src="img/c-chan.jpg" width="32%">
+
+---
+
+.center[
+  ### Gradual type system
+]
+
+- An ordinary static type system
+
+- A new special **any()** type for dynamic-typed parts
+
+- A **compatibility*** relation between types instead of **equality** relation
+
+.center[
+  #### *How compatibility works
+]
+
+- For ordinary types, compatibility works like equality
+```erlang
+integer() ~ integer()
+integer() ≁ boolean()
+```
+
+- The dynamic type any() is compatible to all types
+```erlang
+integer() ~ any()
+any() ~ boolean()
+```
+
+- Compatibility it’s not transitive!
+```erlang
+integer() ~ any() ~ boolean()
+integer() ≁ boolean()
+```
+
+---
+
+.center[
+  ### What's wrong with Dialyzer?
+]
+
+- optimistic type checking
+
+```elixir
+@spec optimistic(integer()) :: integer()
+
+def optimistic(0), do: 1
+def optimistic(_), do: :foo
+```
+<br>
+
+- representation of union of tuples as a tuple of unions
+
+```elixir
+@spec unions() :: {nil, integer()} | {integer(), nil}
+
+def unions, do: {nil, nil}
+```
+<br>
+
+- nested types depth limits
+
+```elixir
+@spec depth() :: {1,{2,{3,{4,5}}}}
+
+def depth, do: {1,{2,{3,{4,6}}}}
+```
+
+---
+
+class: center, middle
+
+# Thanks
+[back to index](index.html)
+
+    </textarea>
+    <script src="js/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
