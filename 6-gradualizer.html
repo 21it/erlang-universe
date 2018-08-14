@@ -18,56 +18,6 @@
 ---
 
 .center[
-  ### Gradual typing
-]
-
-Gradual Typing is a method for mixing static and dynamic typing
-
-- Start out with a dynamically typed small program
-
-- As the program grow larger, gradually add type signatures to make it more statically typed
-
-<img src="img/python-chan.jpg" width="32%">
-<img src="img/php-chan.jpg" width="32%">
-<img src="img/c-chan.jpg" width="32%">
-
----
-
-.center[
-  ### Gradual type system
-]
-
-- An ordinary static type system
-
-- A new special **any()** type for dynamic-typed parts
-
-- A **compatibility*** relation between types instead of **equality** relation
-
-.center[
-  #### *How compatibility works
-]
-
-- For ordinary types, compatibility works like equality
-```erlang
-integer() ~ integer()
-integer() ≁ boolean()
-```
-
-- The dynamic type any() is compatible to all types
-```erlang
-integer() ~ any()
-any() ~ boolean()
-```
-
-- Compatibility it’s not transitive!
-```erlang
-integer() ~ any() ~ boolean()
-integer() ≁ boolean()
-```
-
----
-
-.center[
   ### What's wrong with Dialyzer?
 ]
 
@@ -100,10 +50,156 @@ def depth, do: {1,{2,{3,{4,6}}}}
 
 ---
 
+.center[
+  ### Gradual typing
+]
+
+Gradual Typing is a method for mixing static and dynamic typing
+
+- Start out with a dynamically typed small program
+
+- As the program grow larger, gradually add type signatures to make it more statically typed
+
+<img src="img/python-chan.jpg" width="32%">
+<img src="img/php-chan.jpg" width="32%">
+<img src="img/c-chan.jpg" width="32%">
+
+---
+
+.center[
+  ### Gradual type system
+]
+
+1) An ordinary static type system
+
+2) A new special **any()** type for dynamic-typed parts
+
+3) A **compatibility*** relation between types instead of **equality** relation
+
+.center[
+  #### *How compatibility works
+]
+
+- For ordinary types, compatibility works like equality
+```erlang
+integer() ~ integer()
+integer() ≁ boolean()
+```
+
+- The dynamic type any() is compatible to all types
+```erlang
+integer() ~ any()
+any() ~ boolean()
+```
+
+- Compatibility it’s not transitive!
+```erlang
+integer() ~ any() ~ boolean()
+integer() ≁ boolean()
+```
+
+---
+
+.center[
+  ### Gradualizer
+  https://github.com/josefs/Gradualizer
+]
+
+- is implementation of gradual type system for Erlang VM
+
+- **uses standard Erlang type/spec notations and types**
+
+- without any type specs, no static typing happens
+
+- special **any()** type is used for all dynamic/untyped code (*any() ≠ term()*)
+
+- standard subtyping: **term()** is the biggest type, **none()** is the smallest
+
+- process communication is always dynamically typed
+
+---
+
+.center[
+  ### Gradualizer contributors
+]
+
+.left-column-big.center[
+  <img src="img/josef.jpeg" width="45%">
+  <br>
+  https://github.com/josefs
+  <br>
+  **Josef Svenningsson** - main contributor
+
+  <img src="img/viktor.jpeg" width="45%">
+  <br>
+  https://github.com/zuiderkwast
+  <br>
+  **Viktor Söderqvist** - discussions on type systems and general support
+]
+
+.right-column-big.center[
+  <img src="img/peter.png" width="45%">
+  <br>
+  https://github.com/gomoripeti
+  <br>
+  **Péter Gömöri** - hacking on the tool and general discussions
+
+  <img src="img/timCF.jpeg" width="45%">
+  <br>
+  https://timcf.github.io/
+  <br>
+  **Ilja Tkachuk** - minor improvements for Elixir compatibility
+]
+
+---
+
+.center[
+  ### Crystal
+  Elixir wrapper around Gradualizer with mix task as user interface
+  https://github.com/coingaming/crystal
+]
+
+<br>
+
+```
+mix crystal
+```
+
+Command will check all modules in current mix project
+
+```
+mix crystal <ModuleName>
+```
+
+Command will check only given module
+
+.center[
+  #### Project status
+]
+
+- Alfa-quality, work is in progress
+
+- Elixir-compatible
+
+- can handle primitive standard Erlang types
+
+- cross-module references are supported
+
+---
+
+.center[
+  ### Live demo
+  <img src="img/demo-meme.png" width="50%">
+]
+
+---
+
 class: center, middle
 
 # Thanks
-[back to index](index.html)
+https://github.com/josefs/Gradualizer
+<br>
+### [back to index](index.html)
 
     </textarea>
     <script src="js/remark-latest.min.js">

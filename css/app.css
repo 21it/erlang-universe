@@ -17,6 +17,16 @@ a, a > code {
 
 /* Two-column layout */
 
+.left-column-big {
+  width: 50%;
+  float: left;
+}
+
+.right-column-big {
+  width: 50%;
+  float: right;
+}
+
 .left-column {
   color: #777;
   width: 20%;
