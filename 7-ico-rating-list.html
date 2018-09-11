@@ -81,6 +81,51 @@
   ### ICO rating aggregator
 ]
 
+.center[
+  <div class="mermaid">
+    graph LR
+
+      subgraph ""
+        C[Customer]
+      end
+
+      subgraph ""
+        MA[mobile<br>app] --> C
+        TC[Telegram<br>bot] --> C
+        WS[website] --> C
+        DB[ICO<br>database] --> MA
+        DB --> TC
+        DB --> WS
+        WSE[web<br>scraping<br>engine] -- unify<br>ratings --> DB
+      end
+
+      TOR[TOR] --> WSE
+
+      A1[agency 1] --> TOR
+      A2[agency 2] --> TOR
+      A3[agency 3] --> TOR
+      AU[agency ..] --> TOR
+      AN[agency N] --> TOR
+
+      classDef comment fill:#cdffb2
+      classDef custom fill:#ffffe0
+
+      class C comment
+      class F1BL,F1SI,F2BL,F2SI custom
+  </div>
+
+  Main idea - **simple**, **understandable**, **unified** ICO rating based on
+
+]
+
+.right-column[
+- average ICO ratings from agencies
+
+- ratings of agencies themselves
+
+- historical data
+]
+
 ---
 
 class: center, middle
