@@ -60,3 +60,7 @@ a, a > code {
   background-color: white;
   text-align: center;
 }
+
+.middle-vertical {
+  vertical-align: middle;
+}
