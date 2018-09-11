@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ICO rating list</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="img/favicon.ico"/>
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
+    <textarea id="source">
+
+.middle.center[
+  <img src="img/bitcoin-chan.png" width="28%">
+  <img src="img/ltc-chan.png" width="28%">
+  <br>
+  <img src="img/monero-chan.png" width="33%">
+  <img src="img/ethereum-chan.png" width="33%">
+]
+
+---
+
+.center[
+  ### ICO
+  **Initial Public Offering** without third parties like banks
+]
+
+---
+
+class: center, middle
+
+# Thanks
+
+https://icoratinglist.com/
+
+### [back to index](index.html)
+
+    </textarea>
+    <script src="js/remark-latest.min.js"></script>
+    <script src="js/mermaid.js"></script>
+    <script>
+
+      window.onload = function(){
+        var slideshow = remark.create();
+        // don't let mermaid automatically load on start
+        mermaid.initialize({
+          startOnLoad: false,
+          cloneCssStyles: false,
+          theme: 'neutral',
+          flowchart: {
+            curve: 'basis'
+          }
+        });
+        // callback to render graphs
+        function initMermaidInSlide(slide){
+          // caution: no API to get the DOM element of current slide in remark, this might break in the future
+          document.querySelectorAll(".remark-slides-area .remark-slide")[slide.getSlideIndex()]
+                  .querySelectorAll(".mermaid")
+                  .forEach(function(graph){
+                    mermaid.init(undefined, graph);
+                  });
+        }
+        // on each slide event, trigger init mermaid
+        slideshow.on('afterShowSlide', initMermaidInSlide);
+        // first starting slide won't trigger the slide event, manually init mermaid
+        initMermaidInSlide(slideshow.getSlides()[slideshow.getCurrentSlideIndex()]);
+      };
+
+    </script>
+  </body>
+</html>
