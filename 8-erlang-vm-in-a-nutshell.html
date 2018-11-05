@@ -118,8 +118,57 @@
 
 .center[
   ### Nginx vs Apache
-  <img src="img/nginx-apache-req.png" width="70%">
-  <img src="img/nginx-apache-mem.png" width="70%">
+]
+
+.left-column.center.middle[
+  <img src="img/nginx.png" width="100%">
+  <img src="img/apache.png" width="100%">
+]
+
+.right-column.center.middle[
+  <img src="img/nginx-apache-req.png" width="88%">
+  <img src="img/nginx-apache-mem.png" width="88%">
+]
+
+---
+
+.center[
+  ### NodeJS vs Haskell
+]
+
+.left-column.center.middle[
+  <img src="img/nodejs.png" width="116%">
+  <img src="img/haskell-98.png" width="100%">
+]
+
+.right-column.middle[
+```javascript
+require("./examples/js-server.js")()
+
+// check webpage http://127.0.0.1:3000
+
+(() => {for (i = 0; i <= 1000000; i++) {console.log(i)}})()
+
+// check webpage http://127.0.0.1:3000 while loop is executed
+```
+
+```haskell
+stack new haskell-server yesod-simple --resolver lts-11.22
+
+cd ./haskell-server/
+
+stack ghci
+
+import Control.Concurrent
+
+forkIO main
+
+-- check webpage http://127.0.0.1:3000
+
+mapM_ print [1..1000000]
+
+-- check webpage http://127.0.0.1:3000 while loop is executed
+```
 ]
 
 ---

@@ -9,5 +9,5 @@ module.exports = function () {
           //
           file.serve(request, response);
       }).resume();
-  }).listen(8080);
+  }).listen(3000);
 }
