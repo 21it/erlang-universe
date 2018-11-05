@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Erlang VM in a nutshell</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="img/favicon.ico"/>
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
+    <textarea id="source">
+
+.center[
+  ### Ericsson
+]
+
+- Founded by Lars Magnus Ericsson in 1876
+
+- Bell Labs could not compete in Scandinavia
+
+- Computerized telephone switches since **1954** (AKE/AXE/AXD series)
+
+.center[
+  <img src="img/Lars-Magnus-Ericsson.jpg" width="20%">
+  <img class="small-margin" src="img/ericsson-logo.png" width="30%">
+  <img src="img/Ericsson-phone.jpg" width="20%">
+  <img src="img/Ericsson-mobiles.jpg" width="40%">
+]
+
+---
+
+.center[
+  ### Telecom requirements
+]
+
+- Handling a very large number of concurrent activities
+
+- Systems distributed over several computers
+
+- Continuous operation over several years
+
+- Software maintenance (reconfiguration, etc.) without stopping the system
+
+- Strict reliability requirements
+
+- Fault tolerance both to hardware failures and software errors
+
+.center[
+  <img src="img/cables.jpg" width="50%">
+]
+
+---
+
+class: center, middle
+
+# Thanks
+
+### [back to index](index.html)
+
+    </textarea>
+    <script src="js/remark-latest.min.js"></script>
+    <script src="js/mermaid.js"></script>
+    <script>
+
+      window.onload = function(){
+        var slideshow = remark.create();
+        // don't let mermaid automatically load on start
+        mermaid.initialize({
+          startOnLoad: false,
+          cloneCssStyles: false,
+          theme: 'neutral',
+          flowchart: {
+            curve: 'basis'
+          }
+        });
+        // callback to render graphs
+        function initMermaidInSlide(slide){
+          // caution: no API to get the DOM element of current slide in remark, this might break in the future
+          document.querySelectorAll(".remark-slides-area .remark-slide")[slide.getSlideIndex()]
+                  .querySelectorAll(".mermaid")
+                  .forEach(function(graph){
+                    mermaid.init(undefined, graph);
+                  });
+        }
+        // on each slide event, trigger init mermaid
+        slideshow.on('afterShowSlide', initMermaidInSlide);
+        // first starting slide won't trigger the slide event, manually init mermaid
+        initMermaidInSlide(slideshow.getSlides()[slideshow.getCurrentSlideIndex()]);
+      };
+
+    </script>
+  </body>
+</html>

@@ -64,3 +64,7 @@ a, a > code {
 .middle-vertical {
   vertical-align: middle;
 }
+
+.small-margin {
+  margin: 10px;
+}
