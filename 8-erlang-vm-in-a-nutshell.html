@@ -173,6 +173,46 @@ mapM_ print [1..1000000]
 
 ---
 
+.center[
+  ### Concurrency vs parallelism
+]
+
+.left-column[
+  <img src="img/java-chan.png" width="120%">
+  <img src="img/ruby-chan.jpg" width="120%">
+]
+
+.right-column[
+
+- True parallelism: **Java, C++, Fortran**
+
+ - real UNIX threads are heavy
+
+ - requires very high developer skill
+
+ - overhead for processes sync and management (semaphores, mutexes etc)
+
+ - race conditions, deadlocks
+
+- Concurrency: **JavaScript, Lua, Python, Ruby**
+
+ - actually, only one UNIX thread for all
+
+ - concurrent apps still can have problems with race conditions
+
+ - one fat concurrent task can affect all application
+
+]
+
+---
+
+.center[
+  ### Erlang VM
+  <img src="img/schedulers.png" width="65%">
+]
+
+---
+
 class: center, middle
 
 # Thanks
