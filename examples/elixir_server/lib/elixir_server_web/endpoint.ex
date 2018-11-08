@@ -40,7 +40,7 @@ defmodule ElixirServerWeb.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_elixir_server_key",
-    signing_salt: "Azlxhfvq"
+    signing_salt: "9nsh/QxB"
 
   plug ElixirServerWeb.Router
 end

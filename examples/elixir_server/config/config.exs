@@ -11,7 +11,7 @@ use Mix.Config
 config :elixir_server, ElixirServerWeb.Endpoint,
   server: true,
   url: [host: "localhost"],
-  secret_key_base: "QoNH8BJLtYplQM11iOGoTuflzVW/sbIbc5cVLbncDHc8gvpylppHEKt+Y8YMR2P0",
+  secret_key_base: "lfIM6sveKH4iD2MuHuNJfDTgFZuXO6gYSCXYNd8KwLdhK/gNDQB92PuH+OOgwV6a",
   render_errors: [view: ElixirServerWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: ElixirServer.PubSub, adapter: Phoenix.PubSub.PG2]
 
