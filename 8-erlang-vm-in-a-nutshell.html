@@ -163,7 +163,7 @@ import Control.Concurrent
 
 forkIO main
 
--- check webpage http://127.0.0.1:3000
+-- check webpage http://127.0.0.1:3000 ("warp" webserver)
 
 mapM_ print [1..1000000]
 
@@ -208,8 +208,106 @@ mapM_ print [1..1000000]
 
 .center[
   ### Erlang VM
-  <img src="img/schedulers.png" width="65%">
 ]
+
+```elixir
+mix phx.new elixir_server --no-webpack --no-ecto
+
+cd ./elixir_server
+
+nano ./config/config.exs # put "server: true" setting
+
+mix deps.get && mix compile && iex -S mix
+
+# check webpage http://localhost:4000 ("cowboy" webserver)
+
+Enum.each(1..1000000, &IO.puts/1)
+
+# check webpage http://localhost:4000 while loop is executed
+```
+
+.center[
+  <img src="img/cowboy.png" width="60%">
+]
+
+---
+
+.center[
+  ### Schedulers
+  Erlang/OTP 21 [erts-10.0.8] [source] [64-bit] **[smp:4:4]** [ds:4:4:10]
+  [async-threads:1] [hipe] [dtrace]
+
+  (SMP = Symmetric Multi-Processing)
+]
+
+.left-column-big[
+  <img src="img/schedulers.png" width="100%">
+]
+
+.right-column-big[
+- assigns work to worker
+
+- maximizes throughput and fairness
+
+- minimizes response time and latency
+
+- garbage collection
+
+- memory management
+]
+
+---
+
+.center[
+  ### Schedulers
+]
+
+```elixir
+iex -S mix
+
+:observer.start
+
+spawn fn -> Enum.each(1..1000000, &IO.puts/1) end
+
+# check Load Charts
+
+Enum.each(1..10000, fn _ -> spawn fn -> Enum.each(1..1000000, &IO.puts/1) end end)
+
+# check webpage and load charts (10000 processes!!!)
+```
+
+.center[
+  <img src="img/erlang-chan.png" width="35%">
+  <img src="img/elixir-chan.png" width="35%">
+]
+
+---
+
+.center[
+  ### Cooperative vs Preemptive
+]
+
+- Cooperative scheduling
+
+ - tasks cooperation is needed for context switching
+
+ - task should explicitly release thread control
+
+ - implemented in C++ ([CAF](https://actor-framework.org/)) and in almost all other runtime systems
+
+- Preemptive scheduling
+
+ - can preempt (interrupt, pause) and resume tasks on its own will
+
+ - based on process priority
+
+ - based on process reductions
+
+ - implemented in modern operating systems (Mac, Linux, Windows)
+
+ - ... and in Erlang VM!
+
+*Note: Golang, Python, Ruby, NodeJS and other runtimes are supposed to be preemptive, but they are really not* 😞 *(look at NodeJS example above)*
 
 ---
 
