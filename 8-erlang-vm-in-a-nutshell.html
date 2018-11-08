@@ -10,6 +10,39 @@
     <textarea id="source">
 
 .center[
+  ### Languages
+  <img src="img/langs-anime.png" width="108%">
+]
+
+---
+
+.center[
+  ### Not unique?
+]
+
+- **immutable data**: *ML, Miranda, Haskell, Lisp dialects*
+
+- **actor runtime model**: *Smalltalk, D, Scala (AKKA), Cloud Haskell*
+
+- **message-based communication**: *Smalltalk*
+
+- **pattern matching**: *ML, Prolog, Haskell, Scala*
+
+- **syntax**: *Prolog, Ruby*
+
+- **powerful meta-programming**: *Lisp dialects*
+
+- ...
+
+- **runtime system (Erlang VM)**: no one has built anything like this yet
+
+.center[
+  <img src="img/not-bad.jpg" width="30%">
+]
+
+---
+
+.center[
   ### Ericsson
 ]
 
@@ -145,11 +178,11 @@
 ```javascript
 require("./examples/js-server.js")()
 
-// check webpage http://127.0.0.1:3000
+// check webpage http://localhost:3000
 
 (() => {for (i = 0; i <= 1000000; i++) {console.log(i)}})()
 
-// check webpage http://127.0.0.1:3000 while loop is executed
+// check webpage http://localhost:3000 while loop is executed
 ```
 
 ```haskell
@@ -163,11 +196,11 @@ import Control.Concurrent
 
 forkIO main
 
--- check webpage http://127.0.0.1:3000
+-- check webpage http://localhost:3000 ("warp" webserver)
 
 mapM_ print [1..1000000]
 
--- check webpage http://127.0.0.1:3000 while loop is executed
+-- check webpage http://localhost:3000 while loop is executed
 ```
 ]
 
@@ -208,7 +241,244 @@ mapM_ print [1..1000000]
 
 .center[
   ### Erlang VM
-  <img src="img/schedulers.png" width="65%">
+]
+
+```elixir
+mix phx.new elixir_server --no-webpack --no-ecto
+
+cd ./elixir_server
+
+nano ./config/config.exs # put "server: true" setting
+
+mix deps.get && mix compile && iex -S mix
+
+# check webpage http://localhost:4000 ("cowboy" webserver)
+
+Enum.each(1..1000000, &IO.puts/1)
+
+# check webpage http://localhost:4000 while loop is executed
+```
+
+.center[
+  <img src="img/cowboy.png" width="60%">
+]
+
+---
+
+.center[
+  ### Schedulers
+  Erlang/OTP 21 [erts-10.0.8] [source] [64-bit] **[smp:4:4]** [ds:4:4:10]
+  [async-threads:1] [hipe] [dtrace]
+
+  (SMP = Symmetric Multi-Processing)
+]
+
+.left-column-big[
+  <img src="img/schedulers.png" width="100%">
+]
+
+.right-column-big[
+- assigns work to worker
+
+- maximizes throughput and fairness
+
+- minimizes response time and latency
+
+- garbage collection
+
+- memory management
+]
+
+---
+
+.center[
+  ### Schedulers
+]
+
+```elixir
+iex -S mix
+
+:observer.start
+
+Enum.each(1..1000000, &IO.puts/1)
+
+# check Load Charts
+
+Enum.each(1..10000, fn _ -> spawn fn -> Enum.each(1..1000000, &IO.puts/1) end end)
+
+# check webpage and load charts (10000 processes!!!)
+```
+
+.center[
+  <img src="img/erlang-chan.png" width="35%">
+  <img src="img/elixir-chan.png" width="35%">
+]
+
+---
+
+.center[
+  ### Cooperative vs Preemptive
+]
+
+- Cooperative scheduling
+
+ - tasks cooperation is needed for context switching
+
+ - task should explicitly release thread control
+
+ - implemented in C++ ([CAF](https://actor-framework.org/)) and in almost all other runtime systems
+
+- Preemptive scheduling
+
+ - can preempt (interrupt, pause) and resume tasks on its own will
+
+ - based on process priority
+
+ - based on process reductions
+
+ - implemented in modern operating systems (Mac, Linux, Windows)
+
+ - ... and in Erlang VM (native implementation without libraries!!!)
+
+*Note: Golang, Python, Ruby, NodeJS and other runtimes are supposed to be preemptive, but they are really not* 😞 *(look at NodeJS example above)*
+
+---
+
+.center[
+  ### Schedulers configuration
+]
+
+- preemptive sheduler complexity is hidden from developer
+
+- some things can be configured if really needed
+
+- happened **0 times** in my career `¯\_(ツ)_/¯` (defaults are good)
+
+```elixir
+iex --erl "+S 16:8"
+
+:erlang.system_info(:schedulers) # 16
+
+:erlang.system_info(:schedulers_online) # 8
+
+:erlang.system_flag(:schedulers_online, 10)
+
+:erlang.system_info(:schedulers_online) # 10
+
+spawn fn -> :erlang.process_flag(:priority, :high) end
+```
+
+---
+
+```
+            Shared Heap                     Erlang Process Memory Layout
+
++--------------------------------+      +----------------------------------+
+|                                |      |                                  |
+|                                |      |  PID / Status / Registered Name  |       Process
+|                                |      |                                  |       Control
+|                                |      |   Initial Call / Current Call    +---->  Block
+|                                |      |                                  |       (PCB)
+|                                |      |         Mailbox Pointers         |
+|                                |      |                                  |
+|                                |      +----------------------------------+
+|                                |      |                                  |
+|                                |      |        Function Parameters       |
+|                                |      |                                  |       Process
+|                                |      |         Return Addresses         +---->  Stack
+|                                |      |                                  |
+|    +--------------+            |      |         Local Expressions        |
+|    |              |            |      |                                  |
+|    | +------------+--+         |      +-------------------------------+--+
+|    | |               |         |      |                               |  |
+|    | | +-------------+--+      |      |  ^                            v  +---->  Free
+|    | | |                |      |      |  |                               |       Space
+|    | | | +--------------+-+    |      +--+-------------------------------+
+|    +-+ | |                |    |      |                                  |
+|      +-+ |  Refc Binary   |    |      |  Mailbox Messages (Linked List)  |
+|        +-+                |    |      |                                  |
+|          +------^---------+    |      |  Compound Terms (List, Tuples)   |       Process
+|                 |              |      |                                  +---->  Private
+|                 |              |      |     Terms Larger than a word     |       Heap
+|                 |              |      |                                  |
+|                 +--+ ProcBin +-----------+ Pointers to Large Binaries    |
+|                                |      |                                  |
++--------------------------------+      +----------------------------------+
+```
+
+---
+
+.center[
+  ### Garbage collectors
+]
+
+- *Reference Counting* for global shared heap
+
+- Personal *Generational Copying* GC for **every** process
+
+  - divides the heap into two segments: young and old generations
+
+  - if an object survives a GC cycle the chances of it becoming garbage in short term is low
+
+  - it reduces unnecessary cycles over the data which have not become garbage yet.
+
+.center[
+  <img src="img/gc.gif" width="50%">
+]
+
+---
+
+.center[
+  ### Generational GC scenario
+]
+
+1) `Spawn > No GC > Terminate` (**min_heap_size** is not achieved)
+
+2) `Spawn > Fullsweep > Generational > Terminate`
+
+ - Fullsweep (because no separation between objects yet)
+
+ - switches to Generational and remains on it
+
+3) `Spawn > Fullsweep > Generational > Fullsweep > Generational > ... > Terminate`
+
+ - can switch back if **fullsweep_after** achieved: `:erlang.process_info(pid, :garbage_collection)`
+
+ - can switch back if Generation GC cannot collect enough memory
+
+ - `:erlang.garbage_collect(pid)` can be called manually
+
+4) `Spawn > Fullsweep > Generational > Fullsweep > Increase Heap > Fullsweep > ... > Terminate`
+
+ - when Fullsweep cannot collect enough memory
+
+---
+
+.center[
+  ### Erlang VM
+  *Erlang/Elixir languages perfection is questionable, but Erlang VM perfection is absolute*
+]
+
+- Unique 100% (without any exceptions) preemptive scheduling
+
+- Unique per-process GC
+
+- It is operating system inside operating system
+
+.left-column-big.center[
+  ### Erlang VM
+
+  What to build?
+]
+
+.right-column-big.center[
+  ### Other runtime
+
+  What to build?
+
+  How to build?
+
+  How to optimize?
 ]
 
 ---
