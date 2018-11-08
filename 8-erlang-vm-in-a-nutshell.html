@@ -178,11 +178,11 @@
 ```javascript
 require("./examples/js-server.js")()
 
-// check webpage http://127.0.0.1:3000
+// check webpage http://localhost:3000
 
 (() => {for (i = 0; i <= 1000000; i++) {console.log(i)}})()
 
-// check webpage http://127.0.0.1:3000 while loop is executed
+// check webpage http://localhost:3000 while loop is executed
 ```
 
 ```haskell
@@ -196,11 +196,11 @@ import Control.Concurrent
 
 forkIO main
 
--- check webpage http://127.0.0.1:3000 ("warp" webserver)
+-- check webpage http://localhost:3000 ("warp" webserver)
 
 mapM_ print [1..1000000]
 
--- check webpage http://127.0.0.1:3000 while loop is executed
+-- check webpage http://localhost:3000 while loop is executed
 ```
 ]
 
