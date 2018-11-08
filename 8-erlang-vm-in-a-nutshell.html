@@ -10,6 +10,39 @@
     <textarea id="source">
 
 .center[
+  ### Languages
+  <img src="img/langs-anime.png" width="108%">
+]
+
+---
+
+.center[
+  ### Not unique?
+]
+
+- **immutable data**: *ML, Miranda, Haskell, Lisp dialects*
+
+- **actor runtime model**: *Smalltalk, D, Scala (AKKA), Cloud Haskell*
+
+- **message-based communication**: *Smalltalk*
+
+- **pattern matching**: *ML, Prolog, Haskell, Scala*
+
+- **syntax**: *Prolog, Ruby*
+
+- **powerful meta-programming**: *Lisp dialects*
+
+- ...
+
+- **runtime system (Erlang VM)**: no one has built anything like this yet
+
+.center[
+  <img src="img/not-bad.jpg" width="30%">
+]
+
+---
+
+.center[
   ### Ericsson
 ]
 
@@ -267,7 +300,7 @@ iex -S mix
 
 :observer.start
 
-spawn fn -> Enum.each(1..1000000, &IO.puts/1) end
+Enum.each(1..1000000, &IO.puts/1)
 
 # check Load Charts
 
@@ -305,7 +338,7 @@ Enum.each(1..10000, fn _ -> spawn fn -> Enum.each(1..1000000, &IO.puts/1) end en
 
  - implemented in modern operating systems (Mac, Linux, Windows)
 
- - ... and in Erlang VM!
+ - ... and in Erlang VM (native implementation without libraries!!!)
 
 *Note: Golang, Python, Ruby, NodeJS and other runtimes are supposed to be preemptive, but they are really not* 😞 *(look at NodeJS example above)*
 
