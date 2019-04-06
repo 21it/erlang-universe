@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Scalar blindness</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="img/favicon.ico"/>
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
+    <textarea id="source">
+
+
+class: middle
+
+.center[
+  ### Scalar blindness
+  <img src="img/map-unicode.png" width="80%">
+]
+
+--
+
+```haskell
+map :: (a -> b) -> [a] -> [b]
+
+map f (x:xs) = f x : map f xs
+map _ _      = []
+```
+
+```elixir
+@type a :: term
+@type b :: term
+@spec map((a -> b), [a]) :: [b]
+
+def map(f, [x | xs]), do: [f.(x) | map(f, xs)]
+def map(_, _), do: []
+```
+
+---
+
+.center[
+  ### Boolean blindness
+]
+
+```haskell
+data Bool = False | True
+
+filter :: (a -> Bool) -> [a] -> [a]
+```
+
+```elixir
+@type boolean :: :false | :true
+@type a :: term
+
+@spec filter((a -> boolean), [a]) :: [a]
+```
+
+--
+
+<br>
+.center[
+  <img src="img/filtering.png" width="70%">
+]
+
+<!---
+In some cases filtrate is meaningful (making coffee)
+But in some cases residue is meaningfule (cooking spaghetti)
+--->
+
+---
+
+.center[
+  ### Algebraic data types
+]
+
+```haskell
+data Bool = False | True
+
+filter :: (a -> Bool) -> [a] -> [a]
+```
+
+--
+
+```haskell
+data FilterResult = Discard | Keep
+
+filter :: (a -> FilterResult) -> [a] -> [a]
+```
+
+--
+
+.center[
+  <img src="img/spaghetti.jpg" width="15%">
+]
+
+```haskell
+makeCoffee mix = filter isLiquid mix
+
+cookSpaghetti mix = filter (not . isLiquid) mix
+```
+
+--
+
+```haskell
+makeCoffee mix = filter (\x -> if isLiquid x then Keep else Discard) mix
+
+cookSpaghetti mix = filter (\x -> if isLiquid x then Discard else Keep) mix
+```
+
+---
+
+.center[
+  ### Boolean blindness in UI
+]
+
+.left-column-big.center[
+  <img src="img/rentier-0.png" width="50%" border="1">
+]
+
+--
+
+.right-column-big.center[
+  <img src="img/rentier-1.png" width="50%" border="1">
+]
+
+--
+
+```haskell
+data Bool = False | True -- context is lost outside of data model
+
+data TimeKind = WorkingTime | BreakTime
+```
+
+<!---
+Boolean blindness propagates in programm very easy.
+Let's say this boolean field of model passed to some function
+which renders some nice calendar widget with organization schedule.
+And then its type is just boolean - it loose all its context outside of
+Organization data model.
+--->
+
+--
+
+```haskell
+data TimeKind = WorkingTime | BreakTime | VacationTime | HolidayTime
+```
+
+---
+
+.center[
+  ### Scalar blindness
+]
+
+```haskell
+validate :: String -> String -> String -> HashAlgorithm -> Bool
+```
+
+```elixir
+@spec validate(String.t, String.t, String.t, hash_algorithm) :: boolean
+```
+
+--
+
+.center[
+  <img src="img/shrug.png" width="25%">
+]
+
+--
+
+```haskell
+data Password = Password String
+data PasswordSalt = PasswordSalt String
+data PasswordHash = PasswordHash String
+data ValidationResult = Valid | Invalid
+
+validate :: Password ->
+            PasswordSalt ->
+            PasswordHash ->
+            HashAlgorithm ->
+            ValidationResult
+```
+
+---
+
+.center[
+  ### Scalar overloading
+]
+
+*example from [moment.js](https://momentjs.com/docs/#/parsing/string-format/)*
+```javascript
+moment('2012-10-14', 'YYYY-MM-DD', 'fr', true);
+```
+
+--
+
+```haskell
+moment :: String -> -- scalar blindness
+          String -> -- scalar blindness
+          String -> -- scalar overloading
+          Bool ->   -- boolean blindness
+          Moment    -- looks good
+```
+
+*Smaller* **Locale** *type is expressed with wider overloaded* **String** *type.*
+
+*Are arguments* **'FR'** *or* **'fr-fr'** *or* **'fr-FR'** * also valid? Who knows...*
+
+--
+
+```haskell
+data Date = Date String
+data DateFormat = DateFormat String
+data Locale = En | Fr | Ru | Ee
+data Strictness = Strict | NotStrict
+
+moment :: Date ->       -- Infinite to Infinite
+          DateFormat -> -- Infinite to Infinite
+          Locale ->     -- Infinite to Finite
+          Strictness -> -- Finite to Finite
+          Moment
+```
+
+---
+
+class: center, middle
+
+# Thanks
+
+### [back to index](index.html)
+
+    </textarea>
+    <script src="js/remark-latest.min.js"></script>
+    <script src="js/mermaid.js"></script>
+    <script>
+
+      window.onload = function(){
+        var slideshow = remark.create({countIncrementalSlides: false});
+        // don't let mermaid automatically load on start
+        mermaid.initialize({
+          startOnLoad: false,
+          cloneCssStyles: false,
+          theme: 'neutral',
+          flowchart: {
+            curve: 'basis'
+          }
+        });
+        // callback to render graphs
+        function initMermaidInSlide(slide){
+          // caution: no API to get the DOM element of current slide in remark, this might break in the future
+          document.querySelectorAll(".remark-slides-area .remark-slide")[slide.getSlideIndex()]
+                  .querySelectorAll(".mermaid")
+                  .forEach(function(graph){
+                    mermaid.init(undefined, graph);
+                  });
+        }
+        // on each slide event, trigger init mermaid
+        slideshow.on('afterShowSlide', initMermaidInSlide);
+        // first starting slide won't trigger the slide event, manually init mermaid
+        initMermaidInSlide(slideshow.getSlides()[slideshow.getCurrentSlideIndex()]);
+      };
+
+    </script>
+  </body>
+</html>
