@@ -88,7 +88,7 @@ filter :: (a -> FilterResult) -> [a] -> [a]
 --
 
 .center[
-  <img src="img/spaghetti.jpg" width="15%">
+  <img src="img/spaghetti.jpg" width="20%">
 ]
 
 ```haskell
@@ -241,6 +241,72 @@ This has led to innumerable errors, vulnerabilities, and system crashes, which h
   <img src="img/npe0.png" width="54%" border="1">
   <img src="img/little-duck.png" width="54%" border="1">
 ]
+
+---
+
+.center[
+  ## Parametric ADT (generics)
+]
+
+```haskell
+data Maybe a = Nothing | Just a
+
+foo :: String
+
+string2Int :: String -> Maybe Int
+
+increment :: Int -> Int
+```
+
+--
+
+```haskell
+-- compile-time error here!
+(increment . string2Int) foo
+```
+
+--
+
+```haskell
+-- compiles ok
+case string2Int foo of
+  Just x -> increment x
+  Nothing -> doSomethingElse
+```
+
+---
+
+.center[
+  ## Either
+]
+
+.center[
+  <img src="img/streetfighter-meme.jpg" width="40%" border="1">
+]
+
+--
+
+```haskell
+data Either a b = Left a | Right b
+```
+
+--
+
+```elixir
+@type either(a, b) :: {:error, a} | {:ok, b}
+```
+
+--
+
+```haskell
+foo :: String
+string2Int :: String -> Either ParseError Int
+increment :: Int -> Int
+
+case parseInt foo of
+  Left x -> handleErrorSomehow x
+  Right x -> increment x
+```
 
 ---
 
