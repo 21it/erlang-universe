@@ -176,6 +176,8 @@ validate :: Password ->
             PasswordHash ->
             HashAlgorithm ->
             ValidationResult
+
+-- types are meaningful even outside of this function
 ```
 
 ---
@@ -303,7 +305,7 @@ foo :: String
 string2Int :: String -> Either ParseError Int
 increment :: Int -> Int
 
-case parseInt foo of
+case string2Int foo of
   Left x -> handleErrorSomehow x
   Right x -> increment x
 ```
@@ -313,6 +315,14 @@ case parseInt foo of
 class: center, middle
 
 # Thanks
+
+[Learn you a Haskell for great good](http://learnyouahaskell.com/) <\- basics
+
+[OHaskell](https://www.ohaskell.guide/) <\- basics (rus)
+
+[Gentle introduction to Haskell](https://www.haskell.org/tutorial/) <\- official tutorial
+
+[Functors, applicatives, and monads in pictures](http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html) <\- fun
 
 ### [back to index](index.html)
 
