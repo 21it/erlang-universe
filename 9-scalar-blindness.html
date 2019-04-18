@@ -26,12 +26,38 @@ map _ _      = []
 ```
 
 ```elixir
-@type a :: term
-@type b :: term
+@type a :: any
+@type b :: any
 @spec map((a -> b), [a]) :: [b]
 
 def map(f, [x | xs]), do: [f.(x) | map(f, xs)]
 def map(_, _), do: []
+```
+
+---
+
+class: middle
+count: false
+
+.center[
+  ### Scalar blindness
+  <img src="img/map-unicode.png" width="80%">
+]
+
+```haskell
+map :: (a -> b) -> [a] -> [b]
+
+-- map f (x:xs) = f x : map f xs
+-- map _ _      = []
+```
+
+```elixir
+@type a :: any
+@type b :: any
+@spec map((a -> b), [a]) :: [b]
+
+# def map(f, [x | xs]), do: [f.(x) | map(f, xs)]
+# def map(_, _), do: []
 ```
 
 ---
@@ -48,7 +74,7 @@ filter :: (a -> Bool) -> [a] -> [a]
 
 ```elixir
 @type boolean :: :false | :true
-@type a :: term
+@type a :: any
 
 @spec filter((a -> boolean), [a]) :: [a]
 ```
@@ -311,6 +337,204 @@ case string2Int foo of
 ```
 
 ---
+class: center
+
+## Success story of ADTs
+
+<img src="img/yesod-anime.jpg" width="45%" border="1">
+
+---
+
+```haskell
+-- Define our entities as usual
+share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
+Person
+    firstName String
+    lastName String
+    age Int
+    deriving Show
+|]
+
+-- We'll create a single route, to access a person. It's a very common
+-- occurrence to use an Id type in routes.
+mkYesod "PersistTest" [parseRoutes|
+/ HomeR GET
+/person/#PersonId PersonR GET
+|]
+
+-- List all people in the database
+getHomeR :: Handler Html
+getHomeR = do
+    people <- runDB $ selectList [] [Asc PersonAge]
+    defaultLayout
+        [whamlet|
+            <ul>
+                $forall Entity personid person <- people
+                    <li>
+                        <a href=@{PersonR personid}>#{personFirstName person}
+        |]
+
+-- We'll just return the show value of a person, or a 404 if the Person doesn't
+-- exist.
+getPersonR :: PersonId -> Handler String
+getPersonR personId = do
+    person <- runDB $ get404 personId
+    return $ show person
+```
+
+---
+
+.center[
+  ## ADTs in BEAM languages?
+]
+
+--
+
+```elixir
+false | true
+
+nil
+
+MyModule
+
+:my_function
+
+:USD | :EUR | :BTC
+
+{:ok, ok} | {:error, error}
+
+%MyStruct{foo: "bar"} # %{__struct__: MyStruct, foo: "bar"}
+```
+
+--
+
+```erlang
+-record(person, {name = "", phone = [], address}).
+
+#person{name = "Robert", phone = [0,8,2,3,4,3,1,2], address = undefined}
+
+{person, "Robert", [0,8,2,3,4,3,1,2], undefined}
+```
+
+--
+
+.center[
+  <br>
+  **Atom**, **Tuple** and **Map** are the most abused overloaded types
+]
+
+---
+
+.center[
+  ## AST for ATD (it's macro time!)
+]
+
+```elixir
+convert(100, :USD, :BTCCC)
+```
+
+--
+
+- compiles OK
+- exception in runtime
+- refactoring = HELL
+
+--
+
+```elixir
+defmodule CurrencyCode do
+  defmacro usd, do: :USD
+  defmacro btc, do: :BTC
+end
+```
+
+--
+
+.left-column-big[
+  ```elixir
+  require CurrencyCode
+
+  convert(
+    100,
+    CurrencyCode.usd,
+    CurrencyCode.btccc
+  )
+  ```
+
+  - compile-time error!
+  - [GenEnum](https://github.com/coingaming/gen_enum#genenum) library for enums
+]
+
+--
+
+.right-column-big.center[
+  <img src="img/lisp-chan-1.png" width="50%" border="1">
+]
+
+---
+
+.center[
+  ## Parametric ADTs in Elixir
+]
+
+.left-column-big[
+  ```elixir
+  defmodule Maybe do
+    defmacro just(x) do
+      quote do
+        {:just, unquote(x)}
+      end
+    end
+
+    defmacro nothing, do: :nothing
+  end
+  ```
+  ```elixir
+  defmodule Either do
+    defmacro ok(x) do
+      quote do
+        {:ok, unquote(x)}
+      end
+    end
+
+    defmacro error(x) do
+      quote do
+        {:error, unquote(x)}
+      end
+    end
+  end
+  ```
+]
+
+--
+
+.right-column-big[
+  ```elixir
+  require Maybe
+
+  case string2int(foo) do
+    Maybe.just(x) ->
+      increment(x)
+
+    Maybe.nothing() ->
+      do_something_else
+  end
+  ```
+
+  ```elixir
+  require Either
+
+  case string2int(foo) do
+    Either.ok(x) ->
+      increment(x)
+
+    Either.error(x) ->
+      handle_error_somehow(x)
+  end
+  ```
+]
+
+---
 
 class: center, middle
 
@@ -323,6 +547,10 @@ class: center, middle
 [Gentle introduction to Haskell](https://www.haskell.org/tutorial/) <\- official tutorial
 
 [Functors, applicatives, and monads in pictures](http://adit.io/posts/2013-04-17-functors,_applicatives,_and_monads_in_pictures.html) <\- fun
+
+[Yesod](https://www.yesodweb.com/) <\- the most popular Haskell web framework
+
+[A type of programming](https://atypeofprogramming.com/) <\- book (WIP)
 
 ### [back to index](index.html)
 
