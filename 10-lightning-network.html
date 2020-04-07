@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lightning Network</title>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="img/favicon.ico"/>
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
+    <textarea id="source">
+
+.center[
+  ### Lightning Network
+  <img src="img/lightning-anime.png" width="58%">
+]
+
+--
+
+.center[
+  <img src="img/mailing_list.png" width="58%">
+]
+
+---
+
+.left-column-big[
+  .center[
+    ### Fiat
+  ]
+
+  - Custodial
+
+  - Inflation prone
+
+  .center[
+    ### Visa/Mastercard
+  ]
+
+  - **~24000** txs per second (**kinda**)
+
+  - **kinda** instant confirmation
+
+  - **~2 %** tx fee
+
+  .center[
+    <br>
+    <br>
+    <img src="img/mastercard.jpg" width="80%">
+  ]
+]
+
+--
+
+.right-column-big[
+  .center[
+    ### BTC
+  ]
+
+  - Non-custodial
+
+  - Deflation prone
+
+  .center[
+    ### Blockchain
+  ]
+
+  - **~5** txs per second
+
+  - **~10 minutes** for confiramtion
+
+  - **~1 USD** fee per tx
+
+  .center[
+    <img src="img/bitcoin-chan.png" width="51%">
+  ]
+]
+
+---
+
+.center[
+  ### Unidirectional channel
+]
+
+--
+
+.left-column-big.center[
+  ### Multisig output
+
+  <div class="mermaid">
+    graph TB
+      A((Alice)) -- sign --> MTX[UTXO]
+      B((Bob)) -- sign --> MTX
+      MTX -- spend --> TX0
+      MTX -- spend --> TX1
+      MTX -- spend --> TX[...]
+      MTX -- spend --> TXN
+  </div>
+]
+
+--
+
+.right-column-big.center[
+  ### Locktime
+
+  <div class="mermaid">
+    graph TB
+      Block130 --> Block131
+      Block131 --> BlockX[...]
+      BlockX --> Block200
+      TX[TX<br>locktime=200] --> Block200
+  </div>
+]
+
+---
+
+.middle.center[
+  <img src="img/bitcoin-chan.png" width="28%">
+  <br>
+  <img src="img/ltc-chan.png" width="28%">
+]
+
+---
+
+class: center, middle
+
+# Thanks
+
+[open LN channel with me](https://1ml.com/node/031ff7a20feff8784bac738af7f6c8e571124e5580181bae6bfbf372cf68d40e41)
+
+### [back to index](index.html)
+
+    </textarea>
+    <script src="js/remark-latest.min.js"></script>
+    <script src="js/mermaid.js"></script>
+    <script>
+
+      window.onload = function(){
+        var slideshow = remark.create({countIncrementalSlides: false});
+        // don't let mermaid automatically load on start
+        mermaid.initialize({
+          startOnLoad: false,
+          cloneCssStyles: false,
+          theme: 'neutral',
+          flowchart: {
+            curve: 'basis'
+          }
+        });
+        // callback to render graphs
+        function initMermaidInSlide(slide){
+          // caution: no API to get the DOM element of current slide in remark, this might break in the future
+          document.querySelectorAll(".remark-slides-area .remark-slide")[slide.getSlideIndex()]
+                  .querySelectorAll(".mermaid")
+                  .forEach(function(graph){
+                    mermaid.init(undefined, graph);
+                  });
+        }
+        // on each slide event, trigger init mermaid
+        slideshow.on('afterShowSlide', initMermaidInSlide);
+        // first starting slide won't trigger the slide event, manually init mermaid
+        initMermaidInSlide(slideshow.getSlides()[slideshow.getCurrentSlideIndex()]);
+      };
+
+    </script>
+  </body>
+</html>
