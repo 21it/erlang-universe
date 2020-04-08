@@ -227,7 +227,7 @@ count: false
   graph TB
     A[Alice 10 Coins] --> FUND
     B[Bob 0 Coins] --> FUND
-    FUND --> REFUND[Refund TX<br><br>Alice 10 Coins<br>Bob 0 Coins<br><br>after 14 April]
+    FUND --> REFUND[Refund TX<br><br>Alice 10 Coins<br>Bob 0 Coins<br><br>Locktime 14 April]
     FUND[Fund TX<br><br>Alice+Bob 10 Coins] --> TX1[TX1<br><br>Alice 9 Coins<br>Bob 1 Coin]
     FUND --> TX2[TX2<br><br>Alice 8 Coins<br>Bob 2 Coin]
     FUND --> TX3[TX3<br><br>Alice 7 Coins<br>Bob 3 Coin]
@@ -242,6 +242,127 @@ count: false
 
 <br>
 **Fund TX** should be signed after **Refund TX**
+
+---
+
+.center[
+  ### Timing opcodes
+]
+
+--
+
+.left-column-big[
+  .center[
+    ### OP_CHECKSEQUENCEVERIFY
+    relative locktime opcode
+  ]
+
+  ```haskell
+  if (input confirmations >= n)
+    then ok
+    else fail
+  ```
+]
+
+--
+
+.right-column-big[
+  .center[
+    ### OP_CHECKLOCKTIMEVERIFY
+    absolute locktime opcode
+  ]
+
+  ```haskell
+  if (transaction block height >= n)
+    then ok
+    else fail
+  ```
+]
+
+--
+
+<div class="mermaid">
+  graph LR
+    Block99 --> Block100
+    Block100 --> BlockX[...]
+    BlockX --> Block200
+    TX1(TX1 locktime 100) --> Block100
+    TX2(TX2 can spend TX1 only there) --> Block200
+</div>
+
+---
+
+.center[
+  ### HTLC
+  Hash Time Locked Contracts
+]
+
+--
+
+```elixir
+(
+  keyA and
+  keyB
+)
+
+or
+
+(
+  keyC and
+  (blockchainHeight >= x)
+)
+```
+
+--
+
+.center[
+  ### Foundation of LN channels
+]
+
+- bidirectional money flow
+
+- indefinite duration
+
+- revokable txs
+
+---
+
+.center[
+  ### Revokable TX
+]
+
+--
+
+.left-column-big[
+  .center[
+    ### Held by Alice
+  ]
+  <div class="mermaid">
+    graph TB
+      FUND[Fund TX<br><br>10 Coins] --> COMMIT[Commit TX<br>Bob's sig]
+      COMMIT --> OUT1["(Alice and 100 Blocks)<br>or<br>(AliceR and Bob)"<br><br>2 Coins]
+      COMMIT --> OUT2[Bob<br><br>8 Coins]
+    classDef green fill:#cdffb2
+    class FUND green
+  </div>
+]
+
+--
+
+.right-column-big[
+  .center[
+    ### Held by Bob
+  ]
+  <div class="mermaid">
+    graph TB
+      FUND[Fund TX<br><br>10 Coins] --> COMMIT[Commit TX<br>Alice's sig]
+      COMMIT --> OUT1[Alice<br><br>2 Coins]
+      COMMIT --> OUT2["(Bob and 100 Blocks)<br>or<br>(Alice and BobR)"<br><br>8 Coins]
+    classDef green fill:#cdffb2
+    class FUND green
+  </div>
+]
+
 
 ---
 
