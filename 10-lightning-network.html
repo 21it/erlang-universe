@@ -77,7 +77,7 @@
 ---
 
 .center[
-  ### Unidirectional channel
+  ### Payment channel
 ]
 
 --
@@ -89,8 +89,8 @@
     graph TB
       A((Alice)) -- sign --> MTX[UTXO]
       B((Bob)) -- sign --> MTX
-      MTX -- spend --> TX0
       MTX -- spend --> TX1
+      MTX -- spend --> TX2
       MTX -- spend --> TX[...]
       MTX -- spend --> TXN
   </div>
@@ -112,6 +112,139 @@
 
 ---
 
+name: unidirectional-channel
+class: center
+
+### Unidirectional channel
+
+---
+
+template: unidirectional-channel
+count: false
+
+<div class="mermaid">
+  graph TB
+    A[Alice 10 Coins] --> FUND
+    B[Bob 0 Coins] --> FUND
+    FUND[Fund TX<br><br>Alice+Bob 10 Coins]
+
+  classDef green fill:#cdffb2
+  class A,B green
+</div>
+
+---
+
+template: unidirectional-channel
+count: false
+
+<div class="mermaid">
+  graph TB
+    A[Alice 10 Coins] --> FUND
+    B[Bob 0 Coins] --> FUND
+    FUND[Fund TX<br><br>Alice+Bob 10 Coins]
+
+  classDef green fill:#cdffb2
+  class A,B,FUND green
+</div>
+
+---
+
+template: unidirectional-channel
+count: false
+
+<div class="mermaid">
+  graph TB
+    A[Alice 10 Coins] --> FUND
+    B[Bob 0 Coins] --> FUND
+    FUND[Fund TX<br><br>Alice+Bob 10 Coins] --> TX1[TX1<br><br>Alice 9 Coins<br>Bob 1 Coin]
+
+  classDef green fill:#cdffb2
+  class A,B,FUND green
+</div>
+
+---
+
+template: unidirectional-channel
+count: false
+
+<div class="mermaid">
+  graph TB
+    A[Alice 10 Coins] --> FUND
+    B[Bob 0 Coins] --> FUND
+    FUND[Fund TX<br><br>Alice+Bob 10 Coins] --> TX1[TX1<br><br>Alice 9 Coins<br>Bob 1 Coin]
+    FUND --> TX2[TX2<br><br>Alice 8 Coins<br>Bob 2 Coin]
+
+  classDef green fill:#cdffb2
+  class A,B,FUND green
+</div>
+
+---
+
+template: unidirectional-channel
+count: false
+
+<div class="mermaid">
+  graph TB
+    A[Alice 10 Coins] --> FUND
+    B[Bob 0 Coins] --> FUND
+    FUND[Fund TX<br><br>Alice+Bob 10 Coins] --> TX1[TX1<br><br>Alice 9 Coins<br>Bob 1 Coin]
+    FUND --> TX2[TX2<br><br>Alice 8 Coins<br>Bob 2 Coin]
+    FUND --> TX3[TX3<br><br>Alice 7 Coins<br>Bob 3 Coin]
+
+  classDef green fill:#cdffb2
+  class A,B,FUND green
+</div>
+
+---
+
+template: unidirectional-channel
+count: false
+
+<div class="mermaid">
+  graph TB
+    A[Alice 10 Coins] --> FUND
+    B[Bob 0 Coins] --> FUND
+    FUND[Fund TX<br><br>Alice+Bob 10 Coins] --> TX1[TX1<br><br>Alice 9 Coins<br>Bob 1 Coin]
+    FUND --> TX2[TX2<br><br>Alice 8 Coins<br>Bob 2 Coin]
+    FUND --> TX3[TX3<br><br>Alice 7 Coins<br>Bob 3 Coin]
+
+  classDef green fill:#cdffb2
+  classDef red fill:#ffcac7
+  class A,B,FUND,TX3 green
+  class TX1,TX2 red
+</div>
+
+--
+
+**...What's wrong with it?**
+
+---
+
+template: unidirectional-channel
+count: false
+
+<div class="mermaid">
+  graph TB
+    A[Alice 10 Coins] --> FUND
+    B[Bob 0 Coins] --> FUND
+    FUND --> REFUND[Refund TX<br><br>Alice 10 Coins<br>Bob 0 Coins<br><br>after 14 April]
+    FUND[Fund TX<br><br>Alice+Bob 10 Coins] --> TX1[TX1<br><br>Alice 9 Coins<br>Bob 1 Coin]
+    FUND --> TX2[TX2<br><br>Alice 8 Coins<br>Bob 2 Coin]
+    FUND --> TX3[TX3<br><br>Alice 7 Coins<br>Bob 3 Coin]
+
+  classDef green fill:#cdffb2
+  classDef yellow fill:#ffffe0
+  classDef red fill:#ffcac7
+  class A,B,FUND green
+  class REFUND,TX3 yellow
+  class TX1,TX2 red
+</div>
+
+<br>
+**Fund TX** should be signed after **Refund TX**
+
+---
+
 .middle.center[
   <img src="img/bitcoin-chan.png" width="28%">
   <br>
@@ -124,7 +257,7 @@ class: center, middle
 
 # Thanks
 
-[open LN channel with me](https://1ml.com/node/031ff7a20feff8784bac738af7f6c8e571124e5580181bae6bfbf372cf68d40e41)
+[Open LN channel with me!](https://1ml.com/node/031ff7a20feff8784bac738af7f6c8e571124e5580181bae6bfbf372cf68d40e41)
 
 ### [back to index](index.html)
 
