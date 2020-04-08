@@ -316,7 +316,7 @@ or
 --
 
 .center[
-  ### Foundation of LN channels
+  ### Foundation of Lightning channels
 ]
 
 - bidirectional money flow
@@ -363,13 +363,217 @@ or
   </div>
 ]
 
+---
+
+name: lightning-channel
+
+.center[
+  ### Lightning channel
+]
+
+---
+
+template: lightning-channel
+count: false
+
+.left-column-big[
+  <div class="mermaid">
+    graph TB
+      FUND[Fund TX<br><br>Alice+Bob 10 Coins] --> TX1[TX1<br><br>Alice 9 Coins<br>Bob 1 Coin]
+
+    classDef green fill:#cdffb2
+    class FUND green
+  </div>
+]
+
+---
+
+template: lightning-channel
+count: false
+
+.left-column-big[
+  <div class="mermaid">
+    graph TB
+      FUND[Fund TX<br><br>Alice+Bob 10 Coins] --> TX1[TX1<br><br>Alice 9 Coins<br>Bob 1 Coin]
+      FUND --> TX2[TX2<br><br>Alice 8 Coins<br>Bob 2 Coin]
+
+    classDef green fill:#cdffb2
+    classDef red fill:#ffcac7
+    class FUND green
+    class TX1 red
+  </div>
+]
+
+.right-column-big[
+  TX1 is revoked:
+
+  - Alice and Bob shared **AliceR** and **BobR**
+
+  - Concept is similar to "Mutually assured destruction" principal in military
+]
+
+---
+
+template: lightning-channel
+count: false
+
+.left-column-big[
+  <div class="mermaid">
+    graph TB
+      FUND[Fund TX<br><br>Alice+Bob 10 Coins] --> TX1[TX1<br><br>Alice 9 Coins<br>Bob 1 Coin]
+      FUND --> TX2[TX2<br><br>Alice 8 Coins<br>Bob 2 Coin]
+      FUND --> TX3[TX3<br><br>Alice 7 Coins<br>Bob 3 Coin]
+
+    classDef green fill:#cdffb2
+    classDef red fill:#ffcac7
+    class FUND green
+    class TX1,TX2 red
+  </div>
+]
+
+.right-column-big[
+  TX1 and TX2 are revoked:
+
+  - Alice and Bob shared **AliceR** and **BobR**
+
+  - Concept is similar to "Mutually assured destruction" principal in military
+]
+
+--
+
+.left-column-big.center[
+  <img src="img/justice.jpg" width="55%">
+]
+
+.right-column-big[
+  - Counter-party always can apply **justice transaction** to bad actor
+]
+
+---
+
+.center[
+  ### Multihop HTLC
+]
+
+```elixir
+(
+  keyA and
+  preimageR
+)
+
+or
+
+(
+  keyB and
+  OP_CLTV # absolute locktime
+)
+```
+
+.center[
+  ### Foundation of Lightning Network
+]
+
+- bidirectional money flow
+
+- indefinite duration
+
+- revokable txs
+
+- multihop txs
+
+---
+
+name: lightning-network
+.center[
+  ### Lightning Network
+]
+
+---
+
+template: lightning-network
+count: false
+
+<div class="mermaid">
+  graph LR
+    A[Alice] --- B[Bob]
+    B --- C[Carol]
+</div>
+
+---
+
+template: lightning-network
+count: false
+
+<div class="mermaid">
+  graph LR
+    A[Alice] --- B[Bob]
+    B --- C["Carol<br><br>H = hash(R)"]
+    C -- H --> A
+</div>
+
+---
+
+template: lightning-network
+count: false
+
+<div class="mermaid">
+  graph LR
+    A[Alice<br><br>H]
+    B[Bob]
+    B --- C["Carol<br><br>H,R"]
+    A -- "HTLC:<br>Bob && R ||<br>Alice && 17:00" --> B
+</div>
+
+---
+
+template: lightning-network
+count: false
+
+<div class="mermaid">
+  graph LR
+    A[Alice<br><br>H]
+    B[Bob<br><br>H]
+    C["Carol<br><br>H,R"]
+    A -- "HTLC:<br>Bob && R ||<br>Alice && 17:00" --> B
+    B -- "HTLC:<br>Carol && R ||<br>Bob && 16:00" --> C
+</div>
+
+---
+
+template: lightning-network
+count: false
+
+<div class="mermaid">
+  graph LR
+    A[Alice<br><br>H]
+    B["Bob<br><br>H,R"]
+    C["Carol<br><br>H,R"]
+    A -- "HTLC:<br>Bob && R ||<br>Alice && 17:00" --> B
+    B -- "Reveal R, clear HTLC" --> C
+</div>
+
+---
+
+template: lightning-network
+count: false
+
+<div class="mermaid">
+  graph LR
+    A["Alice<br><br>H,R"]
+    B["Bob<br><br>H,R"]
+    C["Carol<br><br>H,R"]
+    A -- "Reveal R, clear HTLC" --> B
+    B -- "Reveal R, clear HTLC" --> C
+</div>
 
 ---
 
 .middle.center[
+  ### Cross chain swaps
   <img src="img/bitcoin-chan.png" width="28%">
-  <br>
   <img src="img/ltc-chan.png" width="28%">
+
+  Possible, if blockchain implements HTLCs
 ]
 
 ---
